@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Central Games — Family Card Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:        #faf5eb;
+  --cream-dark:   #f0e8d4;
+  --white:        #fffcf5;
+  --sand:         #e8d4a8;
+  --forest:       #3b6b1f;
+  --forest-dark:  #285015;
+  --forest-light: #5a9a35;
+  --earth:        #7a4c28;
+  --earth-light:  #a06840;
+  --amber:        #d4822a;
+  --amber-light:  #f0a04a;
+  --text:         #2a1a08;
+  --text-mid:     #5a3a18;
+  --text-light:   #8a6040;
+  --red-b:        #d44040;
+  --blue-b:       #3a78c9;
+  --green-b:      #3a9a3a;
+  --orange-b:     #e07830;
+  --felt:         #1a4d10;
+  --felt-2:       #22600e;
+  --card-bg:      #fffef8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);line-height:1.6;}
+
+/* ── NAV ─────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:var(--white);
+  border-bottom:3px solid var(--sand);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+  box-shadow:0 2px 14px rgba(60,40,10,.09);
+}
+.nav-logo{
+  font-family:'Fredoka One',cursive;font-size:1.45rem;
+  color:var(--forest);text-decoration:none;
+  display:flex;align-items:center;gap:.45rem;
+}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--text-mid);font-weight:700;font-size:.9rem;transition:color .2s;}
+.nav-links a:hover{color:var(--forest);}
+.nav-ig{color:var(--text-mid);transition:color .2s;}
+.nav-ig:hover{color:#e1306c;}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(155deg,#5a9a35 0%,#3b6b1f 55%,#285015 100%);
+  color:#fff;padding:5rem 2rem 7rem;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.hero-eyebrow{
+  display:inline-block;background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  padding:.3rem 1rem;border-radius:100px;
+  font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;
+}
+.hero h1{font-family:'Fredoka One',cursive;font-size:3.4rem;line-height:1.1;margin-bottom:1.2rem;}
+.hero p{font-size:1.1rem;opacity:.88;margin-bottom:2rem;font-weight:600;max-width:480px;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--amber);color:#fff;
+  padding:.85rem 1.8rem;border-radius:50px;
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:background .2s,transform .15s;display:inline-block;
+}
+.btn-primary:hover{background:var(--amber-light);transform:translateY(-2px);}
+.btn-secondary{
+  background:rgba(255,255,255,.14);color:#fff;
+  padding:.85rem 1.8rem;border-radius:50px;
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  text-decoration:none;border:2px solid rgba(255,255,255,.35);
+  cursor:pointer;transition:background .2s,transform .15s;display:inline-block;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.24);transform:translateY(-2px);}
+
+/* Hero card grid */
+.hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;transform:rotate(7deg);}
+.hero-card{
+  background:var(--card-bg);border-radius:10px;aspect-ratio:.7;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;box-shadow:0 6px 22px rgba(0,0,0,.28);
+  border:2px solid rgba(255,255,255,.3);
+}
+.hero-card.br{background:linear-gradient(135deg,#fde8e8,#ffcaca);}
+.hero-card.bb{background:linear-gradient(135deg,#e8eeff,#c5d4ff);}
+.hero-card.bg{background:linear-gradient(135deg,#e8fde8,#c5ffc5);}
+.hero-card.bo{background:linear-gradient(135deg,#fff3e8,#ffd4a8);}
+
+.hero-wave{position:absolute;bottom:0;left:0;right:0;}
+
+/* ── SHARED SECTION ──────────────────────────────── */
+.section{padding:4.5rem 2rem;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-label{
+  display:inline-block;background:var(--forest);color:#fff;
+  padding:.25rem .9rem;border-radius:100px;
+  font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.8rem;
+}
+.section h2{font-family:'Fredoka One',cursive;font-size:2.3rem;color:var(--forest-dark);margin-bottom:.4rem;}
+.section-sub{font-size:1rem;color:var(--text-mid);margin-bottom:2.8rem;font-weight:600;}
+
+/* ── FEATURES ────────────────────────────────────── */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.feature-card{
+  background:var(--white);border-radius:16px;padding:1.7rem;
+  border:2px solid var(--sand);transition:transform .2s,box-shadow .2s;
+}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(60,40,10,.1);}
+.feature-icon{font-size:2rem;margin-bottom:.7rem;}
+.feature-card h3{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--forest);margin-bottom:.35rem;}
+.feature-card p{font-size:.88rem;color:var(--text-mid);}
+
+/* ── GAME SECTION ────────────────────────────────── */
+.game-bg{background:var(--cream-dark);}
+#game-container{
+  background:var(--felt);border-radius:22px;
+  padding:1.4rem;max-width:820px;margin:0 auto;
+  box-shadow:0 10px 44px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.04);
+  border:3px solid #152e0a;
+}
+.game-area-label{
+  font-family:'Fredoka One',cursive;font-size:.78rem;
+  color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:.55rem;display:flex;align-items:center;gap:.5rem;
+}
+.warren-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-bottom:.6rem;}
+.warren-color{
+  background:rgba(0,0,0,.22);border-radius:10px;padding:.6rem .5rem;
+  text-align:center;position:relative;min-height:78px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;
+  border:2px solid transparent;transition:border-color .3s,background .3s;
+}
+.warren-color.bonded{border-color:rgba(255,215,0,.65);background:rgba(255,215,0,.07);}
+.bond-icon{position:absolute;top:3px;right:4px;font-size:.7rem;}
+.bunny-count{font-family:'Fredoka One',cursive;font-size:1.5rem;line-height:1;}
+.bunny-dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;}
+.bunny-dot{width:13px;height:13px;border-radius:50%;opacity:.85;}
+.color-label{font-size:.62rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;opacity:.65;}
+
+/* Game middle */
+.game-middle{
+  display:grid;grid-template-columns:80px 1fr 130px;
+  gap:.8rem;align-items:center;
+  margin:.8rem 0;padding:1rem;
+  background:rgba(0,0,0,.18);border-radius:12px;
+}
+.deck-pile{display:flex;flex-direction:column;align-items:center;gap:.35rem;}
+.deck-card{
+  width:60px;height:84px;background:linear-gradient(135deg,#2d5a18,#1a3a10);
+  border-radius:8px;border:2px solid rgba(255,255,255,.13);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;cursor:pointer;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:2px 2px 8px rgba(0,0,0,.3);
+}
+.deck-card:hover:not(.disabled){transform:translateY(-3px) scale(1.06);box-shadow:2px 6px 14px rgba(0,0,0,.4);}
+.deck-card.disabled{cursor:not-allowed;opacity:.45;}
+.deck-count{font-size:.68rem;color:rgba(255,255,255,.45);font-weight:700;}
+
+.drawn-card-area{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.drawn-card{
+  width:80px;height:112px;border-radius:9px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:2rem;box-shadow:0 5px 18px rgba(0,0,0,.4);
+  border:2px solid rgba(255,255,255,.25);gap:.15rem;
+  animation:flipIn .35s ease-out;
+}
+@keyframes flipIn{from{transform:rotateY(90deg) scale(.8);opacity:0}to{transform:rotateY(0) scale(1);opacity:1}}
+.drawn-card-label{font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;opacity:.7;}
+.drawn-card-empty{
+  width:80px;height:112px;border-radius:9px;
+  border:2px dashed rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.25);font-size:.72rem;text-align:center;line-height:1.4;
+}
+.game-message{
+  text-align:center;color:rgba(255,255,255,.82);
+  font-size:.8rem;font-weight:700;padding:.4rem;min-height:2.2rem;
+}
+
+/* Action buttons */
+.actions-area{display:flex;flex-direction:column;gap:.4rem;align-items:stretch;}
+.game-btn{
+  background:var(--amber);color:#fff;border:none;border-radius:8px;
+  padding:.48rem .9rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;
+  cursor:pointer;transition:background .15s,transform .1s;text-align:center;
+}
+.game-btn:hover:not(:disabled){background:var(--amber-light);transform:translateY(-1px);}
+.game-btn:disabled{opacity:.38;cursor:not-allowed;}
+.game-btn.sec{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);}
+.game-btn.sec:hover:not(:disabled){background:rgba(255,255,255,.24);}
+.game-btn.go{background:#2a8a2a;}
+.game-btn.go:hover:not(:disabled){background:#38aa38;}
+.color-picker{display:flex;gap:.38rem;flex-wrap:wrap;justify-content:center;}
+.cpick-label{font-size:.65rem;color:rgba(255,255,255,.55);text-align:center;margin-bottom:.15rem;}
+.color-btn{
+  width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.35);
+  cursor:pointer;font-size:.8rem;font-weight:800;
+  transition:transform .15s,border-color .15s;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.color-btn:hover:not(:disabled){transform:scale(1.18);border-color:#fff;}
+.color-btn:disabled{opacity:.28;cursor:not-allowed;}
+.saved-badge{
+  display:inline-flex;align-items:center;gap:.25rem;
+  background:rgba(255,165,0,.28);border:1px solid rgba(255,165,0,.5);
+  border-radius:6px;padding:.18rem .5rem;font-size:.65rem;font-weight:800;color:#ffd080;
+}
+.ai-thinking-txt{font-size:.72rem;color:rgba(255,255,255,.45);text-align:center;animation:pulse 1.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+
+.game-log{
+  background:rgba(0,0,0,.22);border-radius:8px;
+  padding:.65rem .8rem;max-height:90px;overflow-y:auto;margin-top:.6rem;
+}
+.log-entry{font-size:.72rem;color:rgba(255,255,255,.65);padding:.12rem 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.log-entry:first-child{color:rgba(255,255,255,.9);font-weight:700;}
+
+/* Win overlay */
+.win-banner{
+  background:rgba(0,0,0,.82);border-radius:18px;padding:2.2rem;
+  text-align:center;color:#fff;margin-bottom:1rem;
+}
+.win-banner h3{font-family:'Fredoka One',cursive;font-size:2.1rem;margin-bottom:.4rem;}
+.win-banner p{opacity:.78;margin-bottom:1.4rem;}
+
+/* ── RULES ───────────────────────────────────────── */
+.rules-bg{background:var(--white);}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}
+.rule-step{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:1.1rem;}
+.rule-num{
+  flex-shrink:0;width:30px;height:30px;background:var(--forest);color:#fff;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:.95rem;
+}
+.rule-text strong{display:block;color:var(--forest);font-size:.93rem;margin-bottom:.18rem;}
+.rule-text p{font-size:.85rem;color:var(--text-mid);}
+.card-types{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.card-type{background:var(--cream);border-radius:12px;padding:.9rem;border:2px solid var(--sand);}
+.card-type-icon{font-size:1.7rem;margin-bottom:.25rem;}
+.card-type strong{display:block;color:var(--forest);font-size:.85rem;margin-bottom:.18rem;}
+.card-type p{font-size:.78rem;color:var(--text-mid);}
+
+/* ── BUY ─────────────────────────────────────────── */
+.buy-section{
+  background:linear-gradient(135deg,var(--amber) 0%,var(--earth) 100%);
+  color:#fff;text-align:center;
+}
+.buy-section h2{color:#fff;font-family:'Fredoka One',cursive;font-size:2.4rem;margin-bottom:.4rem;}
+.buy-section > .section-inner > p{opacity:.88;font-size:1rem;margin-bottom:.3rem;}
+.price-tag{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0;}
+.buy-features{display:flex;justify-content:center;gap:1.8rem;margin:1.4rem 0 1.8rem;flex-wrap:wrap;}
+.buy-feature{display:flex;align-items:center;gap:.35rem;font-size:.88rem;font-weight:700;opacity:.9;}
+.btn-buy{
+  background:#fff;color:var(--earth);padding:.95rem 2.8rem;border-radius:50px;
+  font-family:'Fredoka One',cursive;font-size:1.15rem;text-decoration:none;
+  display:inline-block;transition:transform .2s,box-shadow .2s;border:none;cursor:pointer;
+}
+.btn-buy:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.2);}
+
+/* ── GAMES GRID ──────────────────────────────────── */
+.games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.game-card{
+  background:var(--white);border-radius:20px;overflow:hidden;
+  border:2px solid var(--sand);transition:transform .2s,box-shadow .2s;
+}
+.game-card:hover{transform:translateY(-6px);box-shadow:0 14px 36px rgba(60,40,10,.12);}
+.game-card-thumb{
+  height:158px;display:flex;align-items:center;justify-content:center;
+  font-size:4rem;position:relative;
+}
+.game-card.main .game-card-thumb{background:linear-gradient(135deg,var(--forest-light),var(--forest-dark));}
+.game-card.soon .game-card-thumb{background:linear-gradient(135deg,#aaa,#777);filter:grayscale(1);}
+.soon-badge{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.58);color:#fff;padding:.2rem .8rem;border-radius:100px;
+  font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
+}
+.game-card-body{padding:1.1rem 1.2rem;}
+.game-card-body h3{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--forest-dark);margin-bottom:.3rem;}
+.game-card-body p{font-size:.83rem;color:var(--text-light);}
+
+/* ── ABOUT ───────────────────────────────────────── */
+.about-bg{background:var(--cream-dark);}
+.about-inner{max-width:680px;margin:0 auto;text-align:center;}
+.about-inner p{font-size:1rem;color:var(--text-mid);margin-bottom:.9rem;font-weight:600;}
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 2rem;text-align:center;}
+.footer-logo{font-family:'Fredoka One',cursive;font-size:1.35rem;color:#fff;margin-bottom:1rem;display:block;}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:1.4rem;flex-wrap:wrap;}
+.footer-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.88rem;font-weight:600;transition:color .2s;}
+.footer-links a:hover{color:#fff;}
+.footer-ig a{
+  display:inline-flex;align-items:center;gap:.5rem;color:#fff;
+  text-decoration:none;background:rgba(255,255,255,.1);
+  padding:.48rem 1.2rem;border-radius:100px;font-size:.88rem;font-weight:700;
+  margin-bottom:1.4rem;transition:background .2s;
+}
+.footer-ig a:hover{background:rgba(255,255,255,.2);}
+.footer-copy{font-size:.75rem;opacity:.45;}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-cards{display:none;}
+  .features-grid{grid-template-columns:1fr 1fr;}
+  .rules-grid{grid-template-columns:1fr;}
+  .games-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .hero h1{font-size:2.3rem;}
+  .features-grid{grid-template-columns:1fr;}
+  .games-grid{grid-template-columns:1fr;}
+  .game-middle{grid-template-columns:70px 1fr;grid-template-rows:auto auto;}
+  .actions-area{grid-column:1/-1;}
+  .warren-grid{grid-template-columns:repeat(4,1fr);}
+  nav .nav-links{display:none;}
+  .card-types{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ══════════════════════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">🐰 Play Central Games</a>
+  <ul class="nav-links">
+    <li><a href="#play">Play Free</a></li>
+    <li><a href="#rules">Rules</a></li>
+    <li><a href="#buy">Buy</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <a href="https://instagram.com/playcentralgames" target="_blank" class="nav-ig" title="Follow on Instagram">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    </svg>
+  </a>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-eyebrow">🌿 Family Card Games</span>
+      <h1>Games Worth Gathering For</h1>
+      <p>Play Central Games makes family game night something everyone actually looks forward to — quick to learn, impossible to put down.</p>
+      <div class="hero-btns">
+        <a href="#buy" class="btn-primary">🛒 Buy Bunny Warren — $24.99</a>
+        <a href="#play" class="btn-secondary">▶ Play Free Online</a>
+      </div>
+    </div>
+    <div class="hero-cards" aria-hidden="true">
+      <div class="hero-card br">🐰</div>
+      <div class="hero-card bb">🐰</div>
+      <div class="hero-card bg">🐰</div>
+      <div class="hero-card">🥕</div>
+      <div class="hero-card">💕</div>
+      <div class="hero-card">🦊</div>
+      <div class="hero-card bo">🐰</div>
+      <div class="hero-card br">🐰</div>
+      <div class="hero-card bg">🐰</div>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 56" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0 56 L0 28 Q180 0 360 18 Q540 36 720 16 Q900 0 1080 18 Q1260 36 1440 12 L1440 56 Z" fill="#faf5eb"/>
+  </svg>
+</section>
+
+<!-- ═══ GAME INFO ══════════════════════════════════════════════════════ -->
+<section class="section" id="game-info">
+  <div class="section-inner">
+    <span class="section-label">Featured Game</span>
+    <h2>Bunny Warren Card Game</h2>
+    <p class="section-sub">The adrenaline-pumping card game the whole family will love · 2–4 Players · 15–30 Min · Ages 10+</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Strategic Gameplay</h3>
+        <p>Collect 4 matching bunnies to build your Warren. Know when to strike, when to steal, and when to shield your flock from danger.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🃏</div>
+        <h3>Special Cards</h3>
+        <p>Carrot cards steal whole color groups, the Fox wipes your opponent's hand, and Bunny Bonds protect your bunnies from both.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👨‍👩‍👧</div>
+        <h3>Family Friendly</h3>
+        <p>Learn in minutes. Plays great with 2 to 4 people, ages 10 and up. Perfect for travel, parties, or cozy game nights at home.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PLAY ONLINE ════════════════════════════════════════════════════ -->
+<section class="section game-bg" id="play">
+  <div class="section-inner">
+    <span class="section-label">Play Free</span>
+    <h2>Bunny Warren — Online</h2>
+    <p class="section-sub">Try the digital version against our AI! Collect 4 same-color bunnies to declare a Bunny Warren and win.</p>
+    <div id="game-container">
+      <div id="game-root"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW TO PLAY ════════════════════════════════════════════════════ -->
+<section class="section rules-bg" id="rules">
+  <div class="section-inner">
+    <span class="section-label">Rules</span>
+    <h2>How to Play</h2>
+    <p class="section-sub">Simple enough for the car ride, strategic enough for game night.</p>
+    <div class="rules-grid">
+      <div>
+        <div class="rule-step">
+          <div class="rule-num">1</div>
+          <div class="rule-text">
+            <strong>Shuffle the Deck</strong>
+            <p>Shuffle all 49 cards and place them face-down in the center. No starting hand — players take turns drawing one card at a time.</p>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="rule-num">2</div>
+          <div class="rule-text">
+            <strong>Collect Bunnies</strong>
+            <p>Draw a colored bunny? Keep it! Bunnies automatically group by color in front of you. Collect 4 of the same color to win.</p>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="rule-num">3</div>
+          <div class="rule-text">
+            <strong>Discard Animal Cards</strong>
+            <p>Drew a black & white farm animal? Bad luck — just discard it and end your turn. No effect, just filler in the deck.</p>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="rule-num">4</div>
+          <div class="rule-text">
+            <strong>Play Special Cards</strong>
+            <p>Carrot, Fox, and Bunny Bond cards trigger actions. Save a Carrot for later — play it the next time you draw any action card!</p>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="rule-num">5</div>
+          <div class="rule-text">
+            <strong>Declare a Warren!</strong>
+            <p>The first player to collect 4 same-color bunnies declares a <strong>Bunny Warren</strong> on their turn and wins the game!</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-types">
+        <div class="card-type">
+          <div class="card-type-icon">🥕</div>
+          <strong>Carrot Card (×6)</strong>
+          <p>Steal one entire color group from your opponent. Or save it — you can play it the next time you draw any action card.</p>
+        </div>
+        <div class="card-type">
+          <div class="card-type-icon">🦊</div>
+          <strong>Fox Card (×1)</strong>
+          <p>Plays immediately. Your opponent loses ALL their unprotected bunny groups. The rarest — and most feared — card in the deck.</p>
+        </div>
+        <div class="card-type">
+          <div class="card-type-icon">💕</div>
+          <strong>Bunny Bond (×2)</strong>
+          <p>Requires 2+ bunnies of one color. Protects that group permanently from Carrot steals and Fox attacks. Play it early!</p>
+        </div>
+        <div class="card-type">
+          <div class="card-type-icon">🐑</div>
+          <strong>Animal Cards (×24)</strong>
+          <p>Sheep, horses, cows, chickens, pigs, llamas. 4 of each. Draw one and your turn ends — just harmless filler cards.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BUY ════════════════════════════════════════════════════════════ -->
+<section class="section buy-section" id="buy">
+  <div class="section-inner">
+    <h2>Get Your Copy Today!</h2>
+    <p>Limited Edition — only 100 decks in the first print run. Own a piece of the original!</p>
+    <div class="price-tag">$24.99</div>
+    <div class="buy-features">
+      <span class="buy-feature">✅ 49 Premium Cards</span>
+      <span class="buy-feature">✅ 2–4 Players</span>
+      <span class="buy-feature">✅ 15–30 Minutes</span>
+      <span class="buy-feature">✅ First Edition — Only 100 in Print</span>
+    </div>
+    <a href="#" class="btn-buy">🛒 Buy Now</a>
+    <p style="margin-top:1rem;font-size:.82rem;opacity:.72;">Store coming soon — follow us on Instagram to be notified first!</p>
+  </div>
+</section>
+
+<!-- ═══ GAMES ══════════════════════════════════════════════════════════ -->
+<section class="section" id="games">
+  <div class="section-inner">
+    <span class="section-label">Our Games</span>
+    <h2>The Play Central Collection</h2>
+    <p class="section-sub">More family games are on the way. Stay close!</p>
+    <div class="games-grid">
+      <div class="game-card main">
+        <div class="game-card-thumb">🐰</div>
+        <div class="game-card-body">
+          <h3>Bunny Warren</h3>
+          <p>The adrenaline-pumping family card game. Collect 4 same-color bunnies, protect your warren, and outwit everyone at the table.</p>
+        </div>
+      </div>
+      <div class="game-card soon">
+        <div class="game-card-thumb">🃏<span class="soon-badge">Coming Soon</span></div>
+        <div class="game-card-body">
+          <h3>Mystery Game #2</h3>
+          <p>A brand new family game is in development. Follow us on Instagram to be the very first to know when it drops!</p>
+        </div>
+      </div>
+      <div class="game-card soon">
+        <div class="game-card-thumb">🎲<span class="soon-badge">Coming Soon</span></div>
+        <div class="game-card-body">
+          <h3>Mystery Game #3</h3>
+          <p>Big ideas are brewing at Play Central HQ. Something wonderful is on the way — stay tuned for the next adventure!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ══════════════════════════════════════════════════════════ -->
+<section class="section about-bg" id="about">
+  <div class="section-inner">
+    <div class="about-inner">
+      <span class="section-label">About Us</span>
+      <h2>Why We Make Games</h2>
+      <p>At Play Central Games, we believe the best moments happen around a table — not a screen. We create card games that are genuinely fun for everyone, with no complicated rulebooks and no setup fuss. Just pure connection.</p>
+      <p>Bunny Warren started as a game we made for our own family. When we saw how much laughter and friendly chaos it sparked at every gathering, we knew we had to share it with the world. Every card has been designed with care, balancing just enough strategy to keep things exciting and just enough luck to let anyone win.</p>
+      <p>We're a small indie game studio with big ideas — and we're just getting started. Each of our games is a limited print run crafted for families who love to play together.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+<footer>
+  <span class="footer-logo">🐰 Play Central Games</span>
+  <div class="footer-links">
+    <a href="#play">Play Online</a>
+    <a href="#rules">Rules</a>
+    <a href="#buy">Buy Now</a>
+    <a href="#games">Games</a>
+    <a href="#about">About</a>
+  </div>
+  <div class="footer-ig">
+    <a href="https://instagram.com/playcentralgames" target="_blank">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      @playcentralgames
+    </a>
+  </div>
+  <p class="footer-copy">© 2025 Play Central Games. All rights reserved. Bunny Warren is a trademark of Play Central Games.</p>
+</footer>
+
+<!-- ═══ GAME ENGINE ════════════════════════════════════════════════════ -->
+<script>
+// ╔══════════════════════════════════════╗
+// ║   BUNNY WARREN — DIGITAL GAME v1.0  ║
+// ╚══════════════════════════════════════╝
+
+const COLORS = ['red','blue','green','orange'];
+const CM = {
+  red:    { name:'Red',    hex:'#d44040', light:'#fde8e8' },
+  blue:   { name:'Blue',   hex:'#3a78c9', light:'#e8eeff' },
+  green:  { name:'Green',  hex:'#3a9a3a', light:'#e8fde8' },
+  orange: { name:'Orange', hex:'#e07830', light:'#fff3e8' },
+};
+const ANIMALS = [
+  {name:'Sheep',emoji:'🐑'},{name:'Horse',emoji:'🐴'},
+  {name:'Cow',emoji:'🐄'},{name:'Chicken',emoji:'🐔'},
+  {name:'Pig',emoji:'🐷'},{name:'Llama',emoji:'🦙'},
+];
+
+let G = null;
+
+// ── Deck ─────────────────────────────────────────
+function buildDeck() {
+  const d = [];
+  COLORS.forEach(c => { for(let i=0;i<4;i++) d.push({type:'bunny',color:c}); });
+  for(let i=0;i<6;i++) d.push({type:'carrot'});
+  for(let i=0;i<2;i++) d.push({type:'bond'});
+  d.push({type:'fox'});
+  ANIMALS.forEach(a => { for(let i=0;i<4;i++) d.push({type:'animal',name:a.name,emoji:a.emoji}); });
+  return shuffle(d);
+}
+function shuffle(a) {
+  const r=[...a];
+  for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}
+  return r;
+}
+function mkPlayer() {
+  return {
+    bunnies:{red:0,blue:0,green:0,orange:0},
+    bonds:{red:false,blue:false,green:false,orange:false},
+    carrot:false,
+  };
+}
+
+// ── Game init ─────────────────────────────────────
+function startGame() {
+  G = {
+    deck: buildDeck(),
+    discard: [],
+    player: mkPlayer(),
+    ai: mkPlayer(),
+    turn: 'player',
+    phase: 'waiting',
+    drawn: null,
+    pending: null,  // card waiting after saved-carrot prompt
+    winner: null,
+    log: ['🐰 Your turn! Click the deck or Draw button to start.'],
+  };
+  render();
+}
+
+function popCard() {
+  if(G.deck.length===0) {
+    G.deck=shuffle([...G.discard]);
+    G.discard=[];
+    addLog('♻️ Deck reshuffled!');
+  }
+  return G.deck.pop();
+}
+function addLog(m) { G.log.unshift(m); if(G.log.length>7) G.log.pop(); }
+function discardCard(c) { G.discard.push(c||{type:'used'}); }
+
+// ── Player draw ───────────────────────────────────
+function playerDraw() {
+  if(G.phase!=='waiting'||G.turn!=='player') return;
+  const card=popCard();
+  G.drawn=card;
+
+  if(card.type==='animal') {
+    discardCard(card);
+    addLog(`${card.emoji} Drew a ${card.name} — discarded. End of turn.`);
+    G.phase='auto';
+    render();
+    setTimeout(endPlayerTurn,1600);
+
+  } else if(card.type==='bunny') {
+    if(G.player.carrot) {
+      G.pending=card; G.phase='sc_prompt';
+      addLog(`🐰 Drew a ${CM[card.color].name} Bunny! You have a saved 🥕 — use it first?`);
+      render();
+    } else {
+      doPlayerBunny(card.color);
+    }
+
+  } else if(card.type==='bond') {
+    const elig=COLORS.filter(c=>G.player.bunnies[c]>=2&&!G.player.bonds[c]);
+    if(G.player.carrot) {
+      G.pending=card; G.phase='sc_prompt';
+      addLog(`💕 Drew a Bunny Bond! You have a saved 🥕 — use it first?`);
+      render();
+    } else if(elig.length===0) {
+      discardCard(card);
+      addLog('💕 Drew Bunny Bond — no group has 2+ unprotected bunnies. Discarded.');
+      G.phase='auto'; render(); setTimeout(endPlayerTurn,1600);
+    } else {
+      G.phase='bond_select';
+      addLog('💕 Bunny Bond! Choose a color group to protect (needs 2+ bunnies).');
+      render();
+    }
+
+  } else if(card.type==='carrot') {
+    if(G.player.carrot) {
+      // Have saved carrot already — must use one; use the drawn one on AI now
+      addLog('🥕 Drew a Carrot! You already have one saved. Steal from AI now:');
+      G.phase='carrot_target'; render();
+    } else {
+      const hasT=COLORS.some(c=>G.ai.bunnies[c]>0&&!G.ai.bonds[c]);
+      if(!hasT) {
+        G.player.carrot=true;
+        addLog('🥕 Drew a Carrot — AI has nothing to steal! Saved automatically.');
+        G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
+      } else {
+        G.phase='carrot_choice';
+        addLog('🥕 Drew a Carrot! Use it now to steal from AI, or save for later?');
+        render();
+      }
+    }
+
+  } else if(card.type==='fox') {
+    if(G.player.carrot) {
+      G.pending=card; G.phase='sc_prompt';
+      addLog(`🦊 Drew the Fox! You have a saved 🥕 — use it before unleashing the Fox?`);
+      render();
+    } else {
+      doFox('player');
+    }
+  }
+}
+
+function doPlayerBunny(color) {
+  G.player.bunnies[color]++;
+  addLog(`🐰 Drew a ${CM[color].name} Bunny! Added. (${G.player.bunnies[color]}/4)`);
+  G.drawn=G.drawn||{type:'bunny',color};
+  G.phase='auto';
+  if(!checkWin('player')) { render(); setTimeout(endPlayerTurn,1500); }
+}
+
+function doFox(by) {
+  const vic=by==='player'?'ai':'player';
+  const vn=vic==='player'?'Your':"AI's";
+  let wiped=[];
+  COLORS.forEach(c=>{
+    if(G[vic].bunnies[c]>0&&!G[vic].bonds[c]) {
+      wiped.push(CM[c].name);
+      for(let i=0;i<G[vic].bunnies[c];i++) discardCard({type:'bunny',color:c});
+      G[vic].bunnies[c]=0;
+    }
+  });
+  discardCard({type:'fox'});
+  if(wiped.length>0) addLog(`🦊 Fox pounced! ${vn} ${wiped.join(', ')} bunnies scattered!`);
+  else addLog(`🦊 Fox pounced but ${vn.toLowerCase()} bunnies were all Bonded — nothing lost!`);
+  G.phase='auto'; render();
+  if(by==='player') setTimeout(endPlayerTurn,2000);
+}
+
+// ── Saved carrot flow ─────────────────────────────
+function useSavedCarrot() {
+  G.player.carrot=false;
+  G.phase='sc_target';
+  addLog('🥕 Choose which AI color group to steal!');
+  render();
+}
+function skipSavedCarrot() {
+  const c=G.pending; G.pending=null;
+  resolvePending(c);
+}
+function resolvePending(card) {
+  G.drawn=card;
+  if(card.type==='bunny') {
+    doPlayerBunny(card.color);
+  } else if(card.type==='bond') {
+    const elig=COLORS.filter(c=>G.player.bunnies[c]>=2&&!G.player.bonds[c]);
+    if(elig.length===0) {
+      discardCard(card);
+      addLog('💕 Bunny Bond drawn — no eligible groups. Discarded.');
+      G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
+    } else {
+      G.phase='bond_select';
+      addLog('💕 Choose a color group to protect!');
+      render();
+    }
+  } else if(card.type==='fox') {
+    doFox('player');
+  }
+}
+
+// sc_target = saved-carrot target select
+function selectScTarget(color) {
+  if(G.ai.bunnies[color]===0) { addLog(`❌ AI has no ${CM[color].name} bunnies!`); render(); return; }
+  if(G.ai.bonds[color]) { addLog(`🛡️ AI's ${CM[color].name} group is Bonded!`); render(); return; }
+  const n=G.ai.bunnies[color];
+  G.player.bunnies[color]+=n; G.ai.bunnies[color]=0; G.ai.bonds[color]=false;
+  discardCard({type:'carrot'});
+  addLog(`🥕 Stole ${n} ${CM[color].name} bunny/bunnies from AI!`);
+  if(!checkWin('player')) {
+    const p=G.pending; G.pending=null;
+    if(p) resolvePending(p);
+    else { G.phase='auto'; render(); setTimeout(endPlayerTurn,1300); }
+  }
+}
+
+// regular carrot target
+function playerUseCarrot() { G.phase='carrot_target'; addLog('🥕 Choose which AI color to steal!'); render(); }
+function playerSaveCarrot() {
+  G.player.carrot=true;
+  addLog('🥕 Carrot saved for later!');
+  G.phase='auto'; render(); setTimeout(endPlayerTurn,1400);
+}
+function selectCarrotTarget(color) {
+  if(G.ai.bunnies[color]===0) { addLog(`❌ AI has no ${CM[color].name} bunnies!`); render(); return; }
+  if(G.ai.bonds[color]) { addLog(`🛡️ AI's ${CM[color].name} bunnies are Bonded!`); render(); return; }
+  const n=G.ai.bunnies[color];
+  G.player.bunnies[color]+=n; G.ai.bunnies[color]=0; G.ai.bonds[color]=false;
+  discardCard({type:'carrot'});
+  addLog(`🥕 Stole ${n} ${CM[color].name} bunny/bunnies from AI!`);
+  if(!checkWin('player')) { G.phase='auto'; render(); setTimeout(endPlayerTurn,1400); }
+}
+
+function selectBondColor(color) {
+  if(G.player.bunnies[color]<2) { addLog(`❌ Need 2+ ${CM[color].name} bunnies!`); render(); return; }
+  if(G.player.bonds[color]) { addLog('Already bonded!'); render(); return; }
+  G.player.bonds[color]=true;
+  discardCard({type:'bond'});
+  addLog(`💕 ${CM[color].name} bunnies are now Bonded and protected!`);
+  G.phase='auto'; render(); setTimeout(endPlayerTurn,1400);
+}
+
+function checkWin(who) {
+  for(const c of COLORS) {
+    if(G[who].bunnies[c]>=4) {
+      G.phase='win'; G.winner=who;
+      addLog(who==='player'
+        ?`🏆 You collected 4 ${CM[c].name} bunnies — BUNNY WARREN! YOU WIN!`
+        :`😱 AI collected 4 ${CM[c].name} bunnies — Bunny Warren! AI wins!`);
+      render(); return true;
+    }
+  }
+  return false;
+}
+
+function endPlayerTurn() {
+  if(G.phase==='win') return;
+  G.drawn=null; G.pending=null;
+  G.turn='ai'; G.phase='ai';
+  render();
+  setTimeout(aiTurn,1100);
+}
+
+// ── AI ────────────────────────────────────────────
+function aiTurn() {
+  if(G.phase==='win') return;
+  const card=popCard();
+  G.drawn=card;
+  addLog('🤖 AI draws...');
+  render();
+
+  setTimeout(()=>{
+    if(card.type==='animal') {
+      discardCard(card);
+      addLog(`🤖 AI drew ${card.emoji} ${card.name} — discarded.`);
+      endAiTurn(); return;
+    }
+
+    // Action card: use saved carrot first if available
+    if(G.ai.carrot && card.type!=='carrot') {
+      const t=bestTarget('player');
+      if(t&&G.player.bunnies[t]>0) {
+        const n=G.player.bunnies[t];
+        G.ai.bunnies[t]+=n; G.player.bunnies[t]=0; G.player.bonds[t]=false;
+        G.ai.carrot=false; discardCard({type:'carrot'});
+        addLog(`🤖🥕 AI used saved Carrot! Stole your ${CM[t].name} bunnies (${n})!`);
+        if(checkWin('ai')) return;
+      } else {
+        G.ai.carrot=false; discardCard({type:'carrot'});
+        addLog('🤖 AI had saved Carrot — no good target, wasted.');
+      }
+      render();
+    }
+
+    if(card.type==='bunny') {
+      G.ai.bunnies[card.color]++;
+      addLog(`🤖🐰 AI drew a ${CM[card.color].name} Bunny! (${G.ai.bunnies[card.color]}/4)`);
+      if(!checkWin('ai')) endAiTurn();
+
+    } else if(card.type==='carrot') {
+      if(G.ai.carrot) {
+        // Can't save 2 — use this one now
+        const t=bestTarget('player');
+        if(t&&G.player.bunnies[t]>0) {
+          const n=G.player.bunnies[t];
+          G.ai.bunnies[t]+=n; G.player.bunnies[t]=0; G.player.bonds[t]=false;
+          discardCard(card);
+          addLog(`🤖🥕 AI (already had saved Carrot) used new one to steal your ${CM[t].name} bunnies!`);
+          if(!checkWin('ai')) endAiTurn();
+        } else { discardCard(card); endAiTurn(); }
+      } else {
+        const t=bestTarget('player');
+        if(t&&G.player.bunnies[t]>=2&&Math.random()<.55) {
+          const n=G.player.bunnies[t];
+          G.ai.bunnies[t]+=n; G.player.bunnies[t]=0; G.player.bonds[t]=false;
+          discardCard(card);
+          addLog(`🤖🥕 AI used Carrot to steal your ${CM[t].name} bunnies (${n})!`);
+          if(!checkWin('ai')) endAiTurn();
+        } else {
+          G.ai.carrot=true;
+          addLog('🤖 AI saved a Carrot for later...');
+          endAiTurn();
+        }
+      }
+
+    } else if(card.type==='bond') {
+      const t=bestBondTarget('ai');
+      if(t) {
+        G.ai.bonds[t]=true; discardCard(card);
+        addLog(`🤖💕 AI Bonded its ${CM[t].name} bunnies!`);
+      } else { discardCard(card); addLog('🤖 AI drew Bunny Bond — no group to protect. Discarded.'); }
+      endAiTurn();
+
+    } else if(card.type==='fox') {
+      G.drawn=card;
+      doFox('ai');
+      if(G.phase!=='win') setTimeout(endAiTurn,1800);
+    }
+
+    render();
+  },900);
+}
+
+function bestTarget(opp) {
+  let best=null,bc=0;
+  COLORS.forEach(c=>{ if(!G[opp].bonds[c]&&G[opp].bunnies[c]>bc){bc=G[opp].bunnies[c];best=c;} });
+  return bc>0?best:null;
+}
+function bestBondTarget(who) {
+  let best=null,bc=1;
+  COLORS.forEach(c=>{ if(G[who].bunnies[c]>=2&&!G[who].bonds[c]&&G[who].bunnies[c]>bc){bc=G[who].bunnies[c];best=c;} });
+  return best;
+}
+function endAiTurn() {
+  if(G.phase==='win') return;
+  G.drawn=null; G.turn='player'; G.phase='waiting'; render();
+}
+
+// ── Render ────────────────────────────────────────
+function warrenHTML(p) {
+  return COLORS.map(c=>{
+    const n=p.bunnies[c], bd=p.bonds[c], m=CM[c];
+    const dots=Array(n).fill(`<div class="bunny-dot" style="background:${m.hex}"></div>`).join('');
+    return `<div class="warren-color ${bd?'bonded':''}" title="${m.name}: ${n}/4 bunnies${bd?' (Bonded 🛡️)':''}">
+      ${bd?'<span class="bond-icon">🛡️</span>':''}
+      <span class="bunny-count" style="color:${m.hex}">${n}</span>
+      <div class="bunny-dots">${dots}</div>
+      <span class="color-label" style="color:${m.hex}">${m.name}</span>
+    </div>`;
+  }).join('');
+}
+
+function drawnCardHTML(card) {
+  if(!card) return `<div class="drawn-card-empty">Draw<br>a card</div>`;
+  if(card.type==='bunny') {
+    const m=CM[card.color];
+    return `<div class="drawn-card" style="background:${m.light};color:${m.hex}">
+      <span style="font-size:2rem">🐰</span>
+      <span class="drawn-card-label" style="color:${m.hex}">${m.name}</span>
+    </div>`;
+  }
+  const MAP={
+    carrot: ['🥕','#fff8ee','#a05010','Carrot'],
+    bond:   ['💕','#fff0f8','#b040a0','Bond'],
+    fox:    ['🦊','#fff4ee','#b03010','Fox!'],
+    animal: [card.emoji,'#f4f4f4','#666',card.name],
+  };
+  const [icon,bg,col,lbl]=MAP[card.type]||['?','#eee','#999','?'];
+  return `<div class="drawn-card" style="background:${bg};color:${col}">
+    <span style="font-size:2rem">${icon}</span>
+    <span class="drawn-card-label" style="color:${col}">${lbl}</span>
+  </div>`;
+}
+
+function actionsHTML() {
+  if(G.winner) return `<button class="game-btn go" onclick="startGame()">🔄 Play Again</button>`;
+  const ph=G.phase;
+
+  if(ph==='waiting'&&G.turn==='player')
+    return `<button class="game-btn" onclick="playerDraw()">🃏 Draw Card</button>
+            ${G.player.carrot?'<div class="saved-badge">🥕 Saved</div>':''}`;
+
+  if(ph==='ai') return `<div class="ai-thinking-txt">🤖 AI is thinking…</div>`;
+  if(ph==='auto') return `<button class="game-btn" disabled>⏳</button>`;
+
+  if(ph==='sc_prompt') return `
+    <button class="game-btn go" onclick="useSavedCarrot()">🥕 Use Saved Carrot!</button>
+    <button class="game-btn sec" onclick="skipSavedCarrot()">Skip → Resolve Card</button>`;
+
+  if(ph==='sc_target') return colorBtnsHTML('selectScTarget','player','Steal which AI group?');
+  if(ph==='carrot_choice') return `
+    <button class="game-btn go" onclick="playerUseCarrot()">🥕 Use Now → Steal!</button>
+    <button class="game-btn sec" onclick="playerSaveCarrot()">💾 Save for Later</button>`;
+  if(ph==='carrot_target') return colorBtnsHTML('selectCarrotTarget','player','Steal which AI group?');
+  if(ph==='bond_select') return colorBtnsHTML('selectBondColor','me','Protect which group?');
+
+  return `<button class="game-btn" disabled>⏳</button>`;
+}
+
+function colorBtnsHTML(fn, perspective, label) {
+  const source = perspective==='me' ? G.player : G.ai;
+  const btns = COLORS.map(c=>{
+    const n=source.bunnies[c], bd=source.bonds[c];
+    let blocked, tip;
+    if(perspective==='me') {
+      blocked=n<2||bd;
+      tip=bd?'Already bonded':n<2?`Need 2+ (have ${n})`:`Protect ${n} ${CM[c].name}`;
+    } else {
+      blocked=n===0||bd;
+      tip=bd?'Bonded — can\'t steal':n===0?'Empty':`Steal ${n} ${CM[c].name}`;
+    }
+    return `<button class="color-btn" style="background:${CM[c].hex}"
+      onclick="${fn}('${c}')" ${blocked?'disabled':''} title="${tip}">
+      ${bd?'🛡️':n>0?n:'—'}
+    </button>`;
+  }).join('');
+  return `<div class="cpick-label">${label}</div><div class="color-picker">${btns}</div>`;
+}
+
+function render() {
+  if(!G) return;
+  const root=document.getElementById('game-root');
+  if(!root) return;
+
+  const winBanner = G.winner ? `
+    <div class="win-banner">
+      <h3>${G.winner==='player'?'🏆 You Win!':'😢 AI Wins!'}</h3>
+      <p>${G.winner==='player'?'Congratulations! You built a Bunny Warren!':'The AI outsmarted you this time. Try again!'}</p>
+      <button class="game-btn go" onclick="startGame()" style="max-width:190px;margin:0 auto;">🔄 Play Again</button>
+    </div>` : '';
+
+  root.innerHTML = `
+    ${winBanner}
+    <div class="game-area-label">🤖 AI's Warren${G.ai.carrot?' · <span class="saved-badge">🥕 Saved</span>':''}</div>
+    <div class="warren-grid">${warrenHTML(G.ai)}</div>
+
+    <div class="game-middle">
+      <div class="deck-pile">
+        <div class="deck-card ${G.phase!=='waiting'||G.turn!=='player'?'disabled':''}" onclick="playerDraw()" title="Draw a card">🂠</div>
+        <div class="deck-count">${G.deck.length}</div>
+      </div>
+      <div class="drawn-card-area">
+        ${drawnCardHTML(G.drawn)}
+        <div class="game-message">${G.log[0]||''}</div>
+      </div>
+      <div class="actions-area">${actionsHTML()}</div>
+    </div>
+
+    <div class="game-area-label">🐰 Your Warren${G.player.carrot?' · <span class="saved-badge">🥕 Saved</span>':''}</div>
+    <div class="warren-grid">${warrenHTML(G.player)}</div>
+
+    <div class="game-log">
+      ${G.log.map((l,i)=>`<div class="log-entry" style="opacity:${Math.max(.4,1-i*.15)}">${l}</div>`).join('')}
+    </div>`;
+}
+
+window.addEventListener('DOMContentLoaded', startGame);
+</script>
+</body>
+</html>
