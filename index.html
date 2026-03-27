@@ -144,11 +144,18 @@ nav{
   margin-bottom:.55rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
 }
 
-/* ── WARREN GRID ─────────────────────────────────── */
-.warren-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-bottom:.6rem;}
+/* ── WARREN GRID — 2×2 colour-group layout ───────── */
+/* Each row holds 2 colour groups side-by-side */
+.warren-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;
+  margin-bottom:.5rem;
+}
+
+/* ── Colour-group slot ───────────────────────────── */
 .warren-color{
-  background:rgba(0,0,0,.22);border-radius:10px;padding:.45rem .35rem .4rem;
-  text-align:center;position:relative;min-height:120px;
+  background:rgba(0,0,0,.22);border-radius:10px;
+  padding:.45rem .35rem .4rem;
+  text-align:center;position:relative;
   display:flex;flex-direction:column;align-items:center;gap:.15rem;
   border:2px solid transparent;transition:border-color .3s,background .3s;
 }
@@ -167,87 +174,110 @@ nav{
   border-color:rgba(255,215,0,.55)!important;
 }
 
-/* Bunny 2×2 image grid inside each warren slot — small fixed-size cards */
+/* ── PLAYER bunny cards (normal size) ────────────── */
 .warren-bunnies-grid{
-  display:grid;grid-template-columns:repeat(2, 38px);gap:3px;
-  justify-content:center;
-  flex-shrink:0;
+  display:grid;grid-template-columns:repeat(2,38px);gap:3px;
+  justify-content:center;flex-shrink:0;
 }
 .warren-bunny-img{
-  width:38px;height:53px;   /* ~card aspect ratio 0.72 */
-  object-fit:contain;
-  border-radius:4px;
+  width:38px;height:53px;
+  object-fit:contain;border-radius:4px;
   background:rgba(255,255,255,.05);
-  transition:transform .18s;
-  display:block;
+  transition:transform .18s;display:block;
 }
 .warren-bunny-img:hover{transform:scale(1.1);}
 .warren-bunny-empty{
   width:38px;height:53px;
   border:1px dashed rgba(255,255,255,.1);
-  border-radius:4px;
-  background:rgba(0,0,0,.1);
+  border-radius:4px;background:rgba(0,0,0,.1);
 }
 
-/* Bond card overlay */
+/* ── AI bunny cards (slightly smaller) ───────────── */
+.warren-bunnies-grid--ai{
+  display:grid;grid-template-columns:repeat(2,28px);gap:3px;
+  justify-content:center;flex-shrink:0;
+}
+.warren-bunny-img--ai{
+  width:28px;height:39px;
+  object-fit:contain;border-radius:3px;
+  background:rgba(255,255,255,.05);
+  transition:transform .18s;display:block;
+}
+.warren-bunny-img--ai:hover{transform:scale(1.1);}
+.warren-bunny-empty--ai{
+  width:28px;height:39px;
+  border:1px dashed rgba(255,255,255,.1);
+  border-radius:3px;background:rgba(0,0,0,.1);
+}
+
+/* Bond card overlay — scales for each size */
 .bond-overlay-wrap{
-  position:absolute;
-  bottom:16px;left:50%;
+  position:absolute;bottom:16px;left:50%;
   transform:translateX(-50%);
-  width:44px;
-  z-index:3;
+  width:36px;z-index:3;
   filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));
   pointer-events:none;
 }
-.bond-overlay-wrap img{width:100%;border-radius:6px;}
+.bond-overlay-wrap--ai{
+  position:absolute;bottom:12px;left:50%;
+  transform:translateX(-50%);
+  width:26px;z-index:3;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));
+  pointer-events:none;
+}
+.bond-overlay-wrap img,.bond-overlay-wrap--ai img{width:100%;border-radius:4px;}
 
 .bond-shield{
-  position:absolute;top:4px;right:5px;
-  font-size:.72rem;background:rgba(255,215,0,.22);
-  border-radius:50%;width:20px;height:20px;
+  position:absolute;top:3px;right:4px;
+  font-size:.65rem;background:rgba(255,215,0,.22);
+  border-radius:50%;width:18px;height:18px;
   display:flex;align-items:center;justify-content:center;
   z-index:4;
 }
 
 .color-label{
-  font-size:.6rem;font-weight:800;letter-spacing:.05em;
-  text-transform:uppercase;margin-top:auto;
-  padding-top:.18rem;
+  font-size:.6rem;font-weight:800;letter-spacing:.04em;
+  text-transform:uppercase;margin-top:auto;padding-top:.15rem;
 }
 
-/* ── CARROT INVENTORY BADGES ─────────────────────── */
-.carrot-inv{
-  display:inline-flex;align-items:center;gap:.28rem;
-  background:rgba(210,120,10,.28);border:1px solid rgba(255,180,0,.45);
-  border-radius:20px;padding:.12rem .55rem;
-  font-size:.7rem;font-weight:800;color:#ffc060;
-  margin-left:.3rem;
+/* ── INVENTORY BADGES (carrots & bonds) ──────────── */
+.inv-badges{display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;margin-left:.3rem;}
+.inv-badge{
+  display:inline-flex;align-items:center;gap:.22rem;
+  border-radius:20px;padding:.1rem .45rem;
+  font-size:.68rem;font-weight:800;
 }
-.carrot-inv.empty{
-  background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.1);
-  color:rgba(255,255,255,.25);
+.inv-badge--carrot{
+  background:rgba(210,120,10,.28);border:1px solid rgba(255,180,0,.45);color:#ffc060;
 }
-.carrot-inv img{width:18px;height:auto;border-radius:2px;}
+.inv-badge--bond{
+  background:rgba(160,70,180,.28);border:1px solid rgba(200,120,220,.45);color:#e0a0ff;
+}
+.inv-badge--empty{
+  background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.22);
+}
+.inv-badge img{width:16px;height:auto;border-radius:2px;}
 
 /* ── GAME MIDDLE ─────────────────────────────────── */
 .game-middle{
-  display:grid;grid-template-columns:72px 1fr 130px;
+  display:grid;grid-template-columns:90px 1fr 140px;
   gap:.8rem;align-items:center;
-  margin:.8rem 0;padding:.9rem;
+  margin:.6rem 0;padding:.9rem;
   background:rgba(0,0,0,.18);border-radius:12px;
 }
-.deck-pile{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.deck-pile{display:flex;flex-direction:column;align-items:center;gap:.35rem;}
 .deck-card-img{
-  width:60px;aspect-ratio:.72;
-  border-radius:8px;border:2px solid rgba(255,255,255,.13);
+  width:82px;aspect-ratio:.72;
+  border-radius:9px;border:2px solid rgba(255,255,255,.18);
   cursor:pointer;display:block;
   transition:transform .15s,box-shadow .15s;
-  box-shadow:3px 3px 10px rgba(0,0,0,.4);
+  box-shadow:4px 4px 14px rgba(0,0,0,.45);
   object-fit:cover;
 }
-.deck-card-img:hover:not(.disabled){transform:translateY(-3px) scale(1.06);box-shadow:2px 6px 14px rgba(0,0,0,.5);}
+.deck-card-img:hover:not(.disabled){transform:translateY(-4px) scale(1.05);box-shadow:3px 8px 18px rgba(0,0,0,.55);}
 .deck-card-img.disabled{cursor:not-allowed;opacity:.45;pointer-events:none;}
-.deck-count{font-size:.68rem;color:rgba(255,255,255,.45);font-weight:700;}
+.deck-count{font-size:.82rem;font-weight:800;color:rgba(255,255,255,.65);letter-spacing:.02em;}
 
 /* Drawn card area — large and prominent */
 .drawn-card-area{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
@@ -428,7 +458,8 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
   .warren-grid{grid-template-columns:repeat(4,1fr);}
   nav .nav-links{display:none;}
   .card-types{grid-template-columns:1fr;}
-  .warren-color{min-height:100px;}
+  .warren-color{min-height:auto;}
+  .game-middle{grid-template-columns:80px 1fr;grid-template-rows:auto auto;}
 }
 </style>
 </head>
@@ -566,7 +597,7 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
       <div class="card-types">
         <div class="card-type">
           <div class="card-type-icon">🥕</div>
-          <strong>Carrot Card (×6)</strong>
+          <strong>Carrot Card (×8)</strong>
           <p>Steal one entire color group from your opponent. Or save it — you can play it the next time you draw any action card.</p>
         </div>
         <div class="card-type">
@@ -576,8 +607,8 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
         </div>
         <div class="card-type">
           <div class="card-type-icon">💕</div>
-          <strong>Bunny Bond (×2)</strong>
-          <p>Requires 2+ bunnies of one color. Protects that group permanently from Carrot steals and Fox attacks. Play it early!</p>
+          <strong>Bunny Bond (×4)</strong>
+          <p>Requires 2+ bunnies of one color. Protects that group from Carrot steals and Fox attacks. Save one for later if no group is ready!</p>
         </div>
         <div class="card-type">
           <div class="card-type-icon">🐑</div>
@@ -596,7 +627,7 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
     <p>Limited Edition — only 100 decks in the first print run. Own a piece of the original!</p>
     <div class="price-tag">$24.99</div>
     <div class="buy-features">
-      <span class="buy-feature">✅ 49 Premium Cards</span>
+      <span class="buy-feature">✅ 52 Premium Cards</span>
       <span class="buy-feature">✅ 2–4 Players</span>
       <span class="buy-feature">✅ 15–30 Minutes</span>
       <span class="buy-feature">✅ First Edition — Only 100 in Print</span>
@@ -677,13 +708,11 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
 <!-- ═══ GAME ENGINE ════════════════════════════════════════════════════ -->
 <script>
 // ╔══════════════════════════════════════╗
-// ║   BUNNY WARREN — DIGITAL GAME v2.0  ║
+// ║   BUNNY WARREN — DIGITAL GAME v3.0  ║
 // ╚══════════════════════════════════════╝
 
 const COLORS = ['red','blue','green','orange'];
 
-// Color map with image file prefixes
-// PB = Purple/Blue bunnies (the "blue" color in the game)
 const CM = {
   red:    { name:'Red',    hex:'#d44040', light:'#fde8e8', prefix:'RB' },
   blue:   { name:'Blue',   hex:'#5a60c0', light:'#e8eeff', prefix:'PB' },
@@ -699,15 +728,14 @@ const ANIMALS = [
 
 let G = null;
 
-// ── Deck ─────────────────────────────────────────
+// ── Deck (52 cards: 16 bunnies, 8 carrots, 4 bonds, 1 fox, 24 animals) ──
 function buildDeck() {
   const d = [];
-  // 4 unique bunny variants per color (matching the 4 card images)
   COLORS.forEach(c => {
     for(let i=1;i<=4;i++) d.push({type:'bunny', color:c, variant:i});
   });
-  for(let i=0;i<6;i++) d.push({type:'carrot'});
-  for(let i=0;i<2;i++) d.push({type:'bond'});
+  for(let i=0;i<8;i++) d.push({type:'carrot'});   // 8 carrots
+  for(let i=0;i<4;i++) d.push({type:'bond'});      // 4 bonds
   d.push({type:'fox'});
   ANIMALS.forEach(a => { for(let i=0;i<4;i++) d.push({type:'animal',name:a.name,emoji:a.emoji}); });
   return shuffle(d);
@@ -719,11 +747,11 @@ function shuffle(a) {
 }
 function mkPlayer() {
   return {
-    bunnies:{red:0,blue:0,green:0,orange:0},
-    bonds:{red:false,blue:false,green:false,orange:false},
-    // Track which variant cards are in inventory per color
+    bunnies: {red:0,blue:0,green:0,orange:0},
+    bonds:   {red:false,blue:false,green:false,orange:false},
     variants:{red:[],blue:[],green:[],orange:[]},
-    carrot:false,
+    carrot:  false,   // 1 saved carrot max
+    bond:    0,       // saved bond cards (0–2)
   };
 }
 
@@ -752,85 +780,140 @@ function popCard() {
   }
   return G.deck.pop();
 }
-function addLog(m) { G.log.unshift(m); if(G.log.length>7) G.log.pop(); }
+function addLog(m) { G.log.unshift(m); if(G.log.length>8) G.log.pop(); }
 function discardCard(c) { G.discard.push(c||{type:'used'}); }
+
+// ── Helper: does drawing this card warrant a saved-bond prompt? ──────
+function eligibleBondGroups() {
+  return COLORS.filter(c => G.player.bunnies[c]>=2 && !G.player.bonds[c]);
+}
 
 // ── Player draw ───────────────────────────────────
 function playerDraw() {
   if(G.phase!=='waiting'||G.turn!=='player') return;
-  const card=popCard();
-  G.drawn=card;
+  const card = popCard();
+  G.drawn = card;
 
   if(card.type==='animal') {
     discardCard(card);
     addLog(`${card.emoji} Drew a ${card.name} — discarded. End of turn.`);
-    G.phase='auto';
+    G.phase='auto'; render(); setTimeout(endPlayerTurn,1600);
+    return;
+  }
+
+  // Saved carrot prompt takes priority for action cards
+  if(G.player.carrot && card.type!=='carrot') {
+    G.pending = card;
+    G.phase = 'sc_prompt';
+    addLog(`Drew a ${cardName(card)}! You have a saved 🥕 — use it first?`);
+    render(); return;
+  }
+
+  // Saved bond prompt for non-bond action cards
+  if(G.player.bond>0 && eligibleBondGroups().length>0 && card.type!=='bond') {
+    G.pending = card;
+    G.phase = 'sb_prompt';
+    addLog(`Drew a ${cardName(card)}! You have a saved 💕 Bond — use it first?`);
+    render(); return;
+  }
+
+  resolveDrawn(card);
+}
+
+function cardName(card) {
+  if(card.type==='bunny') return `${CM[card.color].name} Bunny`;
+  if(card.type==='carrot') return 'Carrot';
+  if(card.type==='bond') return 'Bunny Bond';
+  if(card.type==='fox') return 'Fox';
+  return card.name||'?';
+}
+
+// After carrot prompt resolves, check if bond prompt also needed
+function afterCarrotCheck(originalCard) {
+  if(!originalCard) { G.phase='auto'; render(); setTimeout(endPlayerTurn,1400); return; }
+  if(G.player.bond>0 && eligibleBondGroups().length>0 && originalCard.type!=='bond') {
+    G.pending = originalCard;
+    G.phase = 'sb_prompt';
+    addLog(`You have a saved 💕 Bond — use it before resolving the ${cardName(originalCard)}?`);
     render();
-    setTimeout(endPlayerTurn,1600);
-
-  } else if(card.type==='bunny') {
-    if(G.player.carrot) {
-      G.pending=card; G.phase='sc_prompt';
-      addLog(`🐰 Drew a ${CM[card.color].name} Bunny! You have a saved 🥕 — use it first?`);
-      render();
-    } else {
-      doPlayerBunny(card.color, card.variant);
-    }
-
-  } else if(card.type==='bond') {
-    const elig=COLORS.filter(c=>G.player.bunnies[c]>=2&&!G.player.bonds[c]);
-    if(G.player.carrot) {
-      G.pending=card; G.phase='sc_prompt';
-      addLog(`💕 Drew a Bunny Bond! You have a saved 🥕 — use it first?`);
-      render();
-    } else if(elig.length===0) {
-      discardCard(card);
-      addLog('💕 Drew Bunny Bond — no group has 2+ unprotected bunnies. Discarded.');
-      G.phase='auto'; render(); setTimeout(endPlayerTurn,1600);
-    } else {
-      G.phase='bond_select';
-      addLog('💕 Bunny Bond! Choose a color group to protect (needs 2+ bunnies).');
-      render();
-    }
-
-  } else if(card.type==='carrot') {
-    if(G.player.carrot) {
-      addLog('🥕 Drew a Carrot! You already have one saved. Steal from AI now:');
-      G.phase='carrot_target'; render();
-    } else {
-      const hasT=COLORS.some(c=>G.ai.bunnies[c]>0&&!G.ai.bonds[c]);
-      if(!hasT) {
-        G.player.carrot=true;
-        addLog('🥕 Drew a Carrot — AI has nothing to steal! Saved automatically.');
-        G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
-      } else {
-        G.phase='carrot_choice';
-        addLog('🥕 Drew a Carrot! Use it now to steal from AI, or save for later?');
-        render();
-      }
-    }
-
-  } else if(card.type==='fox') {
-    if(G.player.carrot) {
-      G.pending=card; G.phase='sc_prompt';
-      addLog(`🦊 Drew the Fox! You have a saved 🥕 — use it before unleashing the Fox?`);
-      render();
-    } else {
-      doFox('player');
-    }
+  } else {
+    resolvePending(originalCard);
   }
 }
 
+// Core card resolution
+function resolveDrawn(card) {
+  G.drawn = card;
+  if(card.type==='bunny') {
+    doPlayerBunny(card.color, card.variant);
+  } else if(card.type==='carrot') {
+    handleCarrotDraw();
+  } else if(card.type==='bond') {
+    handleBondDraw();
+  } else if(card.type==='fox') {
+    doFox('player');
+  }
+}
+
+function resolvePending(card) {
+  G.drawn = card;
+  G.pending = null;
+  resolveDrawn(card);
+}
+
+// ── Bunny ─────────────────────────────────────────
 function doPlayerBunny(color, variant) {
   G.player.bunnies[color]++;
-  // Track which variant cards the player holds
   if(variant) G.player.variants[color].push(variant);
-  addLog(`🐰 Drew a ${CM[color].name} Bunny! Added. (${G.player.bunnies[color]}/4)`);
-  G.drawn = G.drawn || {type:'bunny',color,variant};
+  addLog(`🐰 Drew a ${CM[color].name} Bunny! (${G.player.bunnies[color]}/4)`);
+  G.drawn = G.drawn||{type:'bunny',color,variant};
   G.phase='auto';
   if(!checkWin('player')) { render(); setTimeout(endPlayerTurn,1500); }
 }
 
+// ── Carrot draw ───────────────────────────────────
+function handleCarrotDraw() {
+  if(G.player.carrot) {
+    // Already have one saved — must use drawn one immediately
+    addLog('🥕 Drew a Carrot! Already have one saved. Steal from AI now:');
+    G.phase='carrot_target'; render();
+  } else {
+    const hasT = COLORS.some(c=>G.ai.bunnies[c]>0&&!G.ai.bonds[c]);
+    if(!hasT) {
+      G.player.carrot=true;
+      addLog('🥕 Drew a Carrot — AI has nothing to steal! Saved automatically.');
+      G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
+    } else {
+      G.phase='carrot_choice';
+      addLog('🥕 Drew a Carrot! Use it now to steal from AI, or save for later?');
+      render();
+    }
+  }
+}
+
+// ── Bond draw ─────────────────────────────────────
+function handleBondDraw() {
+  const elig = eligibleBondGroups();
+  if(elig.length===0) {
+    // No eligible groups — auto-save if room
+    if(G.player.bond<2) {
+      G.player.bond++;
+      discardCard(G.drawn); G.drawn=null;
+      addLog(`💕 Drew a Bunny Bond — no groups ready yet. Saved! (${G.player.bond} saved)`);
+    } else {
+      discardCard(G.drawn); G.drawn=null;
+      addLog('💕 Drew a Bunny Bond — no groups ready & already have 2 saved. Discarded.');
+    }
+    G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
+  } else {
+    // Can use now or save
+    G.phase='bond_choice';
+    addLog(`💕 Drew a Bunny Bond! Use it now to protect a group, or save for later?`);
+    render();
+  }
+}
+
+// ── Fox ───────────────────────────────────────────
 function doFox(by) {
   const vic=by==='player'?'ai':'player';
   const vn=vic==='player'?'Your':"AI's";
@@ -844,12 +927,12 @@ function doFox(by) {
   });
   discardCard({type:'fox'});
   if(wiped.length>0) addLog(`🦊 Fox pounced! ${vn} ${wiped.join(', ')} bunnies scattered!`);
-  else addLog(`🦊 Fox pounced but ${vn.toLowerCase()} bunnies were all Bonded — nothing lost!`);
+  else addLog(`🦊 Fox pounced but all bunnies were Bonded — nothing lost!`);
   G.phase='auto'; render();
   if(by==='player') setTimeout(endPlayerTurn,2000);
 }
 
-// ── Saved carrot flow ─────────────────────────────
+// ── Saved Carrot flow ─────────────────────────────
 function useSavedCarrot() {
   G.player.carrot=false;
   G.phase='sc_target';
@@ -857,49 +940,25 @@ function useSavedCarrot() {
   render();
 }
 function skipSavedCarrot() {
-  const c=G.pending; G.pending=null;
-  resolvePending(c);
+  const pend=G.pending; G.pending=null;
+  G.drawn=pend;
+  afterCarrotCheck(pend);
 }
-function resolvePending(card) {
-  G.drawn=card;
-  if(card.type==='bunny') {
-    doPlayerBunny(card.color, card.variant);
-  } else if(card.type==='bond') {
-    const elig=COLORS.filter(c=>G.player.bunnies[c]>=2&&!G.player.bonds[c]);
-    if(elig.length===0) {
-      discardCard(card);
-      addLog('💕 Bunny Bond drawn — no eligible groups. Discarded.');
-      G.phase='auto'; render(); setTimeout(endPlayerTurn,1500);
-    } else {
-      G.phase='bond_select';
-      addLog('💕 Choose a color group to protect!');
-      render();
-    }
-  } else if(card.type==='fox') {
-    doFox('player');
-  }
-}
-
-// ── Carrot / Bond selection ───────────────────────
 function selectScTarget(color) {
   const n=G.ai.bunnies[color];
   if(!n||G.ai.bonds[color]) return;
   G.ai.bunnies[color]=0;
   G.player.bunnies[color]+=n;
-  // Move variants across
-  const stolen = G.ai.variants[color].splice(0);
-  stolen.forEach(v => G.player.variants[color].push(v));
+  const stolen=G.ai.variants[color].splice(0);
+  stolen.forEach(v=>G.player.variants[color].push(v));
   discardCard({type:'carrot'});
   addLog(`🥕 Used saved Carrot! Stole ${n} ${CM[color].name} bunnies from AI!`);
   if(!checkWin('player')) {
     const pend=G.pending; G.pending=null;
-    if(pend) { resolvePending(pend); } else { G.phase='auto'; render(); setTimeout(endPlayerTurn,1500); }
+    afterCarrotCheck(pend);
   }
 }
-
-function playerUseCarrot() {
-  G.phase='carrot_target'; render();
-}
+function playerUseCarrot() { G.phase='carrot_target'; render(); }
 function playerSaveCarrot() {
   G.player.carrot=true;
   discardCard(G.drawn); G.drawn=null;
@@ -911,19 +970,53 @@ function selectCarrotTarget(color) {
   if(!n||G.ai.bonds[color]) return;
   G.ai.bunnies[color]=0;
   G.player.bunnies[color]+=n;
-  const stolen = G.ai.variants[color].splice(0);
-  stolen.forEach(v => G.player.variants[color].push(v));
+  const stolen=G.ai.variants[color].splice(0);
+  stolen.forEach(v=>G.player.variants[color].push(v));
   G.player.carrot=false;
   discardCard({type:'carrot'});
   addLog(`🥕 Carrot used! Stole ${n} ${CM[color].name} bunnies from AI!`);
   if(!checkWin('player')) { G.phase='auto'; render(); setTimeout(endPlayerTurn,1500); }
 }
 
+// ── Saved Bond flow ───────────────────────────────
+function useSavedBond() {
+  G.player.bond--;
+  G.phase='sb_target';
+  addLog('💕 Choose which group to protect with your saved Bond!');
+  render();
+}
+function skipSavedBond() {
+  const pend=G.pending; G.pending=null;
+  G.drawn=pend;
+  resolvePending(pend);
+}
+function selectSbTarget(color) {
+  if(G.player.bunnies[color]<2||G.player.bonds[color]) return;
+  G.player.bonds[color]=true;
+  addLog(`💕 Saved Bond used! ${CM[color].name} bunnies are now protected!`);
+  const pend=G.pending; G.pending=null;
+  G.drawn=pend;
+  if(pend) resolvePending(pend);
+  else { G.phase='auto'; render(); setTimeout(endPlayerTurn,1400); }
+}
+// "Use now" from bond_choice (fresh bond drawn)
+function playerUseBondNow() { G.phase='bond_select'; render(); }
+function playerSaveBond() {
+  if(G.player.bond<2) {
+    G.player.bond++;
+    discardCard(G.drawn); G.drawn=null;
+    addLog(`💕 Bond saved for later! (${G.player.bond} saved)`);
+  } else {
+    discardCard(G.drawn); G.drawn=null;
+    addLog('💕 Already have 2 saved Bonds — this one was discarded.');
+  }
+  G.phase='auto'; render(); setTimeout(endPlayerTurn,1400);
+}
 function selectBondColor(color) {
   if(G.player.bunnies[color]<2||G.player.bonds[color]) return;
   G.player.bonds[color]=true;
   discardCard(G.drawn); G.drawn=null;
-  addLog(`💕 Bunny Bond placed! Your ${CM[color].name} bunnies are protected!`);
+  addLog(`💕 Bunny Bond placed! ${CM[color].name} bunnies are protected!`);
   G.phase='auto'; render(); setTimeout(endPlayerTurn,1400);
 }
 
@@ -941,8 +1034,7 @@ function checkWin(who) {
 // ── End turns ─────────────────────────────────────
 function endPlayerTurn() {
   if(G.phase==='win') return;
-  G.drawn=null; G.turn='ai'; G.phase='ai';
-  render();
+  G.drawn=null; G.turn='ai'; G.phase='ai'; render();
   setTimeout(aiTurn, 700);
 }
 
@@ -963,6 +1055,12 @@ function aiTurn() {
       endAiTurn();
 
     } else if(card.type==='bunny') {
+      // AI uses saved bond before taking bunnies if it's close to winning
+      const hasBondTarget=COLORS.some(c=>G.ai.bunnies[c]>=2&&!G.ai.bonds[c]);
+      if(G.ai.bond>0 && hasBondTarget && Math.random()<.6) {
+        const bt=bestBondTarget('ai');
+        if(bt){G.ai.bonds[bt]=true; G.ai.bond--; addLog(`🤖💕 AI used a saved Bond on ${CM[bt].name}!`);}
+      }
       G.ai.bunnies[card.color]++;
       if(card.variant) G.ai.variants[card.color].push(card.variant);
       addLog(`🤖🐰 AI drew a ${CM[card.color].name} Bunny! (${G.ai.bunnies[card.color]}/4)`);
@@ -972,11 +1070,7 @@ function aiTurn() {
       if(G.ai.carrot) {
         const t=bestTarget('player');
         if(t&&G.player.bunnies[t]>0) {
-          const n=G.player.bunnies[t];
-          // move variants
-          const stolen = G.player.variants[t].splice(0);
-          stolen.forEach(v => G.ai.variants[t].push(v));
-          G.ai.bunnies[t]+=n; G.player.bunnies[t]=0; G.player.bonds[t]=false;
+          stealFrom('player',t);
           discardCard(card);
           addLog(`🤖🥕 AI (already had saved Carrot) used new one to steal your ${CM[t].name} bunnies!`);
           if(!checkWin('ai')) endAiTurn();
@@ -984,12 +1078,9 @@ function aiTurn() {
       } else {
         const t=bestTarget('player');
         if(t&&G.player.bunnies[t]>=2&&Math.random()<.55) {
-          const n=G.player.bunnies[t];
-          const stolen = G.player.variants[t].splice(0);
-          stolen.forEach(v => G.ai.variants[t].push(v));
-          G.ai.bunnies[t]+=n; G.player.bunnies[t]=0; G.player.bonds[t]=false;
+          stealFrom('player',t);
           discardCard(card);
-          addLog(`🤖🥕 AI used Carrot to steal your ${CM[t].name} bunnies (${n})!`);
+          addLog(`🤖🥕 AI used Carrot to steal your ${CM[t].name} bunnies!`);
           if(!checkWin('ai')) endAiTurn();
         } else {
           G.ai.carrot=true;
@@ -1003,10 +1094,20 @@ function aiTurn() {
       if(t) {
         G.ai.bonds[t]=true; discardCard(card);
         addLog(`🤖💕 AI Bonded its ${CM[t].name} bunnies!`);
-      } else { discardCard(card); addLog('🤖 AI drew Bunny Bond — no group to protect. Discarded.'); }
+      } else if(G.ai.bond<2) {
+        G.ai.bond++;
+        discardCard(card);
+        addLog(`🤖 AI saved a Bond for later. (${G.ai.bond} saved)`);
+      } else {
+        discardCard(card);
+        addLog('🤖 AI drew Bunny Bond — nothing to protect. Discarded.');
+      }
       endAiTurn();
 
     } else if(card.type==='fox') {
+      // AI uses saved bond before fox if it protects a good group
+      const bt=bestBondTarget('ai');
+      if(G.ai.bond>0 && bt) { G.ai.bonds[bt]=true; G.ai.bond--; addLog(`🤖💕 AI used a saved Bond before unleashing the Fox!`); }
       G.drawn=card;
       doFox('ai');
       if(G.phase!=='win') setTimeout(endAiTurn,1800);
@@ -1014,6 +1115,16 @@ function aiTurn() {
 
     render();
   },900);
+}
+
+function stealFrom(vic, color) {
+  const n=G[vic].bunnies[color];
+  const src=vic==='player'?G.player:G.ai;
+  const dst=vic==='player'?G.ai:G.player;
+  dst.bunnies[color]+=n; src.bunnies[color]=0;
+  src.bonds[color]=false;
+  const stolen=src.variants[color].splice(0);
+  stolen.forEach(v=>dst.variants[color].push(v));
 }
 
 function bestTarget(opp) {
@@ -1031,103 +1142,79 @@ function endAiTurn() {
   G.drawn=null; G.turn='player'; G.phase='waiting'; render();
 }
 
-// ── Warren HTML (with actual card images) ─────────
-function warrenHTML(p) {
+// ── Warren HTML ───────────────────────────────────
+// isAi=true → use smaller card images
+function warrenHTML(p, isAi) {
+  const gridCls  = isAi ? 'warren-bunnies-grid--ai' : 'warren-bunnies-grid';
+  const imgCls   = isAi ? 'warren-bunny-img--ai'    : 'warren-bunny-img';
+  const emptyCls = isAi ? 'warren-bunny-empty--ai'  : 'warren-bunny-empty';
+  const bondW    = isAi ? 'bond-overlay-wrap--ai'   : 'bond-overlay-wrap';
+
   return COLORS.map(c=>{
     const n=p.bunnies[c], bd=p.bonds[c], m=CM[c];
-    const isThree = (n === 3);
-    const isFour  = (n === 4);
-    const classes = [
-      'warren-color',
-      bd      ? 'bonded'     : '',
-      isThree ? 'three-glow' : '',
-    ].filter(Boolean).join(' ');
+    const isThree=(n===3);
+    const classes=['warren-color', bd?'bonded':'', isThree?'three-glow':''].filter(Boolean).join(' ');
 
-    // Build 2×2 grid of bunny card images (slots 1–4)
-    let cells = '';
+    let cells='';
     for(let i=1;i<=4;i++){
       if(i<=n){
-        // Use tracked variant if available, otherwise fall back to position index
-        const variantNum = (p.variants[c][i-1]) || i;
-        cells += `<img src="images/${m.prefix}${variantNum}.png"
-                       class="warren-bunny-img"
-                       alt="${m.name} Bunny ${variantNum}"
-                       onerror="this.style.background='${m.hex}';this.style.opacity='0.6'">`;
+        const vn=(p.variants[c][i-1])||i;
+        cells+=`<img src="images/${m.prefix}${vn}.png" class="${imgCls}"
+                  alt="${m.name} Bunny"
+                  onerror="this.style.background='${m.hex}';this.style.opacity='.5'">`;
       } else {
-        cells += `<div class="warren-bunny-empty"></div>`;
+        cells+=`<div class="${emptyCls}"></div>`;
       }
     }
 
-    // Bond card overlay (shown when bonded)
-    const bondOverlay = bd ? `
-      <div class="bond-overlay-wrap">
-        <img src="images/bunnybondcard.png" alt="Bunny Bond">
-      </div>
-      <div class="bond-shield">🛡️</div>` : '';
+    const bondOverlay=bd?`
+      <div class="${bondW}"><img src="images/bunnybondcard.png" alt="Bond"></div>
+      <div class="bond-shield">🛡️</div>`:'' ;
 
-    // 3-bunny tooltip hint
-    const glow3hint = isThree ? `<div style="font-size:.55rem;color:rgba(255,215,0,.85);font-weight:800;letter-spacing:.04em;margin-top:1px;">ONE MORE!</div>` : '';
+    const hint=isThree?`<div style="font-size:.52rem;color:rgba(255,215,0,.9);font-weight:800;margin-top:1px;">ONE MORE!</div>`:'';
 
     return `<div class="${classes}"
-      title="${m.name}: ${n}/4 bunnies${bd?' (Bonded 🛡️)':''}${isThree?' — ONE MORE TO WIN!':''}">
-      <div class="warren-bunnies-grid">${cells}</div>
+      title="${m.name}: ${n}/4${bd?' (Bonded)':''}${isThree?' — ONE MORE TO WIN!':''}">
+      <div class="${gridCls}">${cells}</div>
       ${bondOverlay}
       <span class="color-label" style="color:${m.hex}">${m.name} ${n}/4</span>
-      ${glow3hint}
+      ${hint}
     </div>`;
   }).join('');
 }
 
-// ── Drawn card (actual card image) ───────────────
+// ── Drawn card ────────────────────────────────────
 function drawnCardHTML(card) {
   if(!card) return `<div class="drawn-card-empty">Draw<br>a card</div>`;
-
   if(card.type==='animal') {
     return `<div class="drawn-card" style="background:#f0ece0;color:#555">
-      <span style="font-size:2.2rem">${card.emoji}</span>
+      <span style="font-size:2.4rem">${card.emoji}</span>
       <span class="drawn-card-label" style="color:#777">${card.name}</span>
     </div>`;
   }
-
-  let imgSrc, label, bgColor;
-
-  if(card.type==='bunny') {
-    const m=CM[card.color];
-    const vn = card.variant || 1;
-    imgSrc = `images/${m.prefix}${vn}.png`;
-    label  = `${m.name} Bunny`;
-    bgColor= m.light;
-  } else if(card.type==='carrot') {
-    imgSrc = 'images/carrotcard.png';
-    label  = 'Carrot';
-    bgColor= '#fff8ee';
-  } else if(card.type==='bond') {
-    imgSrc = 'images/bunnybondcard.png';
-    label  = 'Bunny Bond';
-    bgColor= '#fff0f8';
-  } else if(card.type==='fox') {
-    imgSrc = 'images/foxcard.png';
-    label  = 'Fox!';
-    bgColor= '#fff4ee';
-  }
-
+  let imgSrc,label,bgColor;
+  if(card.type==='bunny')  { const m=CM[card.color]; imgSrc=`images/${m.prefix}${card.variant||1}.png`; label=`${m.name} Bunny`; bgColor=m.light; }
+  if(card.type==='carrot') { imgSrc='images/carrotcard.png';     label='Carrot';     bgColor='#fff8ee'; }
+  if(card.type==='bond')   { imgSrc='images/bunnybondcard.png';  label='Bunny Bond'; bgColor='#fff0f8'; }
+  if(card.type==='fox')    { imgSrc='images/foxcard.png';        label='Fox!';       bgColor='#fff4ee'; }
   if(imgSrc) {
     return `<div class="drawn-card-img-wrap" style="background:${bgColor}">
-      <img src="${imgSrc}" alt="${label}" style="animation:flipIn .35s ease-out">
+      <img src="${imgSrc}" alt="${label}">
       <div class="drawn-card-label-bar" style="background:${bgColor};color:#444">${label}</div>
     </div>`;
   }
   return `<div class="drawn-card-empty">?</div>`;
 }
 
-// ── Carrot inventory badge ────────────────────────
-function carrotBadgeHTML(hasCarrot) {
-  if(hasCarrot) {
-    return `<span class="carrot-inv" title="Saved Carrot — ready to steal!">
-      <img src="images/carrotcard.png" alt="carrot"> ×1 Saved
-    </span>`;
-  }
-  return `<span class="carrot-inv empty" title="No saved Carrot">🥕 ×0</span>`;
+// ── Inventory badges (carrots + bonds) ────────────
+function invBadgesHTML(carrot, bond) {
+  const carrotBadge = carrot
+    ? `<span class="inv-badge inv-badge--carrot" title="Saved Carrot"><img src="images/carrotcard.png" alt="carrot"> ×1</span>`
+    : `<span class="inv-badge inv-badge--empty">🥕 ×0</span>`;
+  const bondBadge = bond>0
+    ? `<span class="inv-badge inv-badge--bond" title="${bond} saved Bond(s)"><img src="images/bunnybondcard.png" alt="bond"> ×${bond}</span>`
+    : `<span class="inv-badge inv-badge--empty">💕 ×0</span>`;
+  return `<span class="inv-badges">${carrotBadge}${bondBadge}</span>`;
 }
 
 // ── Action buttons ────────────────────────────────
@@ -1138,34 +1225,47 @@ function actionsHTML() {
   if(ph==='waiting'&&G.turn==='player')
     return `<button class="game-btn" onclick="playerDraw()">🃏 Draw Card</button>`;
 
-  if(ph==='ai') return `<div class="ai-thinking-txt">🤖 AI is thinking…</div>`;
+  if(ph==='ai')   return `<div class="ai-thinking-txt">🤖 AI is thinking…</div>`;
   if(ph==='auto') return `<button class="game-btn" disabled>⏳</button>`;
 
+  // Saved carrot prompt
   if(ph==='sc_prompt') return `
-    <button class="game-btn go" onclick="useSavedCarrot()">🥕 Use Saved Carrot!</button>
+    <button class="game-btn go"  onclick="useSavedCarrot()">🥕 Use Saved Carrot!</button>
     <button class="game-btn sec" onclick="skipSavedCarrot()">Skip → Resolve Card</button>`;
+  if(ph==='sc_target')    return colorBtnsHTML('selectScTarget','player','Steal which AI group?');
 
-  if(ph==='sc_target') return colorBtnsHTML('selectScTarget','player','Steal which AI group?');
+  // Carrot draw choices
   if(ph==='carrot_choice') return `
-    <button class="game-btn go" onclick="playerUseCarrot()">🥕 Use Now → Steal!</button>
+    <button class="game-btn go"  onclick="playerUseCarrot()">🥕 Use Now → Steal!</button>
     <button class="game-btn sec" onclick="playerSaveCarrot()">💾 Save for Later</button>`;
   if(ph==='carrot_target') return colorBtnsHTML('selectCarrotTarget','player','Steal which AI group?');
+
+  // Saved bond prompt
+  if(ph==='sb_prompt') return `
+    <button class="game-btn go"  onclick="useSavedBond()">💕 Use Saved Bond!</button>
+    <button class="game-btn sec" onclick="skipSavedBond()">Skip → Resolve Card</button>`;
+  if(ph==='sb_target') return colorBtnsHTML('selectSbTarget','me','Protect which group?');
+
+  // Bond draw choices
+  if(ph==='bond_choice') return `
+    <button class="game-btn go"  onclick="playerUseBondNow()">💕 Use Now → Protect!</button>
+    <button class="game-btn sec" onclick="playerSaveBond()">💾 Save for Later</button>`;
   if(ph==='bond_select') return colorBtnsHTML('selectBondColor','me','Protect which group?');
 
   return `<button class="game-btn" disabled>⏳</button>`;
 }
 
 function colorBtnsHTML(fn, perspective, label) {
-  const source = perspective==='me' ? G.player : G.ai;
-  const btns = COLORS.map(c=>{
+  const source=perspective==='me'?G.player:G.ai;
+  const btns=COLORS.map(c=>{
     const n=source.bunnies[c], bd=source.bonds[c];
-    let blocked, tip;
-    if(perspective==='me') {
+    let blocked,tip;
+    if(perspective==='me'){
       blocked=n<2||bd;
       tip=bd?'Already bonded':n<2?`Need 2+ (have ${n})`:`Protect ${n} ${CM[c].name}`;
     } else {
       blocked=n===0||bd;
-      tip=bd?'Bonded — can\'t steal':n===0?'Empty':`Steal ${n} ${CM[c].name}`;
+      tip=bd?"Bonded — can't steal":n===0?'Empty':`Steal ${n} ${CM[c].name}`;
     }
     return `<button class="color-btn" style="background:${CM[c].hex}"
       onclick="${fn}('${c}')" ${blocked?'disabled':''} title="${tip}">
@@ -1181,33 +1281,27 @@ function render() {
   const root=document.getElementById('game-root');
   if(!root) return;
 
-  const winBanner = G.winner ? `
+  const winBanner=G.winner?`
     <div class="win-banner">
       <h3>${G.winner==='player'?'🏆 You Win!':'😢 AI Wins!'}</h3>
       <p>${G.winner==='player'?'Congratulations! You built a Bunny Warren!':'The AI outsmarted you this time. Try again!'}</p>
-      <button class="game-btn go" onclick="startGame()" style="max-width:190px;margin:0 auto;">🔄 Play Again</button>
-    </div>` : '';
+      <button class="game-btn go" onclick="startGame()" style="max-width:200px;margin:0 auto;">🔄 Play Again</button>
+    </div>`:'';
 
-  // Carrot inventory display
-  const aiCarrotBadge     = carrotBadgeHTML(G.ai.carrot);
-  const playerCarrotBadge = carrotBadgeHTML(G.player.carrot);
-
-  root.innerHTML = `
+  root.innerHTML=`
     ${winBanner}
 
     <div class="game-area-label">
       🤖 AI's Warren
-      ${aiCarrotBadge}
+      ${invBadgesHTML(G.ai.carrot, G.ai.bond)}
     </div>
-    <div class="warren-grid">${warrenHTML(G.ai)}</div>
+    <div class="warren-grid">${warrenHTML(G.ai, true)}</div>
 
     <div class="game-middle">
       <div class="deck-pile">
-        <img src="images/Back.png"
-             alt="Draw"
+        <img src="images/Back.png" alt="Draw"
              class="deck-card-img ${G.phase!=='waiting'||G.turn!=='player'?'disabled':''}"
-             onclick="playerDraw()"
-             title="Draw a card">
+             onclick="playerDraw()" title="Draw a card">
         <div class="deck-count">${G.deck.length} left</div>
       </div>
       <div class="drawn-card-area">
@@ -1219,9 +1313,9 @@ function render() {
 
     <div class="game-area-label">
       🐰 Your Warren
-      ${playerCarrotBadge}
+      ${invBadgesHTML(G.player.carrot, G.player.bond)}
     </div>
-    <div class="warren-grid">${warrenHTML(G.player)}</div>
+    <div class="warren-grid">${warrenHTML(G.player, false)}</div>
 
     <div class="game-log">
       ${G.log.map((l,i)=>`<div class="log-entry" style="opacity:${Math.max(.4,1-i*.15)}">${l}</div>`).join('')}
