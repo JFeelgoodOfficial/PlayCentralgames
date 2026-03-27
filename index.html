@@ -249,7 +249,22 @@ nav{
   filter:drop-shadow(0 1px 4px rgba(0,0,0,.5));
 }
 
-/* Shield badge */
+/* ── PLAYER warren: each pair is full-width stacked ─ */
+.warren-area--player .warren-pair{
+  grid-template-columns:1fr;  /* stack Red above Blue, Green above Orange */
+  gap:.3rem;
+}
+.warren-area--player .ws-card{
+  width:48px;height:67px;   /* slightly bigger for player */
+}
+.warren-area--player .ws-empty{
+  width:48px;height:67px;
+}
+.warren-area--player .ws-bond-slot{
+  width:40px;height:56px;
+}
+
+/* ── AI warren stays side-by-side (no override needed) */
 .row-shield{
   position:absolute;top:3px;right:5px;font-size:.55rem;
   background:rgba(255,215,0,.25);border-radius:50%;
@@ -318,16 +333,42 @@ nav{
   animation:flipIn .35s ease-out;
 }
 .drawn-card-label{font-size:.5rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.7;}
-/* Empty slot — same size as deck card, clickable */
+/* Empty slot — same size as deck card, clickable, softly glowing */
+@keyframes drawGlow {
+  0%,100%{
+    border-color:rgba(255,255,255,.22);
+    box-shadow:0 0 6px 2px rgba(255,255,255,.08),inset 0 0 8px rgba(255,255,255,.04);
+  }
+  50%{
+    border-color:rgba(255,255,255,.55);
+    box-shadow:0 0 18px 6px rgba(255,255,255,.18),inset 0 0 14px rgba(255,255,255,.08);
+  }
+}
+@keyframes drawFlash {
+  0%  {background:rgba(255,255,255,.0);}
+  25% {background:rgba(255,255,255,.35);box-shadow:0 0 30px 12px rgba(255,255,255,.45);}
+  100%{background:rgba(255,255,255,.0);box-shadow:none;}
+}
 .drawn-card-empty{
   width:82px;aspect-ratio:.72;border-radius:9px;
-  border:2px dashed rgba(255,255,255,.25);
+  border:2px dashed rgba(255,255,255,.22);
   display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.32);font-size:.7rem;
+  color:rgba(255,255,255,.45);font-size:.68rem;
   text-align:center;line-height:1.5;
-  cursor:pointer;transition:border-color .2s,background .2s;
+  cursor:pointer;
+  animation:drawGlow 2.4s ease-in-out infinite;
+  transition:background .15s;
 }
-.drawn-card-empty:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05);}
+.drawn-card-empty.flash{
+  animation:drawFlash .45s ease-out forwards;
+}
+.drawn-card-empty.inactive{
+  animation:none;
+  border-color:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.2);
+  cursor:default;
+  opacity:.45;
+}
 .game-message{
   text-align:center;color:rgba(255,255,255,.82);
   font-size:.74rem;font-weight:700;padding:.25rem;
@@ -806,6 +847,20 @@ function eligibleBondGroups() {
   return COLORS.filter(c => G.player.bunnies[c]>=2 && !G.player.bonds[c]);
 }
 
+// ── Flash the draw slot then draw ────────────────
+function flashAndDraw(el) {
+  if(G.phase!=='waiting'||G.turn!=='player') return;
+  el.classList.add('flash');
+  el.style.pointerEvents='none';
+  setTimeout(playerDraw, 120);
+}
+function deckTap() {
+  if(G.phase!=='waiting'||G.turn!=='player') return;
+  const slot = document.getElementById('draw-empty-slot');
+  if(slot) { slot.classList.add('flash'); slot.style.pointerEvents='none'; }
+  setTimeout(playerDraw, 120);
+}
+
 // ── Player draw ───────────────────────────────────
 function playerDraw() {
   if(G.phase!=='waiting'||G.turn!=='player') return;
@@ -1237,9 +1292,14 @@ function warrenHTML(p, isAi) {
 function drawnCardHTML(card) {
   if(!card) {
     const canDraw = G.phase==='waiting' && G.turn==='player';
-    return `<div class="drawn-card-empty"
-                 ${canDraw?'onclick="playerDraw()" title="Click to draw"':'style="cursor:default;opacity:.4"'}>
-      ${canDraw ? '👆 Tap deck<br>or here to draw' : 'Draw<br>a card'}
+    if(canDraw) {
+      return `<div class="drawn-card-empty" id="draw-empty-slot"
+                   onclick="flashAndDraw(this)">
+        👆 Tap deck<br>or here to draw
+      </div>`;
+    }
+    return `<div class="drawn-card-empty inactive">
+      Draw<br>a card
     </div>`;
   }
   if(card.type==='animal') {
@@ -1279,7 +1339,7 @@ function actionsHTML() {
   const ph=G.phase;
 
   if(ph==='waiting'&&G.turn==='player')
-    return `<button class="game-btn" onclick="playerDraw()">🃏 Draw Card</button>`;
+    return ``;  /* draw via deck image or empty slot tap — no button needed */
 
   if(ph==='ai')   return `<div class="ai-thinking-txt">🤖 AI is thinking…</div>`;
   if(ph==='auto') return `<button class="game-btn" disabled>⏳</button>`;
@@ -1357,7 +1417,7 @@ function render() {
       <div class="deck-pile">
         <img src="images/Back.png" alt="Draw"
              class="deck-card-img ${G.phase!=='waiting'||G.turn!=='player'?'disabled':''}"
-             onclick="playerDraw()" title="Draw a card">
+             onclick="deckTap()" title="Draw a card">
         <div class="deck-count">${G.deck.length} left</div>
       </div>
       <div class="drawn-card-area">
@@ -1371,7 +1431,7 @@ function render() {
       🐰 Your Warren
       ${invBadgesHTML(G.player.carrot, G.player.bond)}
     </div>
-    <div class="warren-area">${warrenHTML(G.player, false)}</div>
+    <div class="warren-area warren-area--player">${warrenHTML(G.player, false)}</div>
 
     <div class="game-log">
       ${G.log.map((l,i)=>`<div class="log-entry" style="opacity:${Math.max(.4,1-i*.15)}">${l}</div>`).join('')}
