@@ -147,9 +147,9 @@ nav{
 /* ── WARREN GRID ─────────────────────────────────── */
 .warren-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-bottom:.6rem;}
 .warren-color{
-  background:rgba(0,0,0,.22);border-radius:10px;padding:.55rem .45rem .45rem;
-  text-align:center;position:relative;min-height:160px;
-  display:flex;flex-direction:column;align-items:center;gap:.2rem;
+  background:rgba(0,0,0,.22);border-radius:10px;padding:.45rem .35rem .4rem;
+  text-align:center;position:relative;min-height:120px;
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;
   border:2px solid transparent;transition:border-color .3s,background .3s;
 }
 .warren-color.bonded{
@@ -167,34 +167,36 @@ nav{
   border-color:rgba(255,215,0,.55)!important;
 }
 
-/* Bunny 2×2 image grid inside each warren slot */
+/* Bunny 2×2 image grid inside each warren slot — small fixed-size cards */
 .warren-bunnies-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:3px;
-  width:100%;flex:1;
+  display:grid;grid-template-columns:repeat(2, 38px);gap:3px;
+  justify-content:center;
+  flex-shrink:0;
 }
 .warren-bunny-img{
-  width:100%;aspect-ratio:.72;
+  width:38px;height:53px;   /* ~card aspect ratio 0.72 */
   object-fit:contain;
-  border-radius:5px;
-  background:rgba(255,255,255,.04);
-  transition:transform .2s;
+  border-radius:4px;
+  background:rgba(255,255,255,.05);
+  transition:transform .18s;
+  display:block;
 }
-.warren-bunny-img:hover{transform:scale(1.06);}
+.warren-bunny-img:hover{transform:scale(1.1);}
 .warren-bunny-empty{
-  aspect-ratio:.72;
+  width:38px;height:53px;
   border:1px dashed rgba(255,255,255,.1);
-  border-radius:5px;
+  border-radius:4px;
   background:rgba(0,0,0,.1);
 }
 
-/* Bond card overlay (placed after the image grid) */
+/* Bond card overlay */
 .bond-overlay-wrap{
   position:absolute;
-  bottom:20px;left:50%;
+  bottom:16px;left:50%;
   transform:translateX(-50%);
-  width:54%;
+  width:44px;
   z-index:3;
-  filter:drop-shadow(0 3px 6px rgba(0,0,0,.55));
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));
   pointer-events:none;
 }
 .bond-overlay-wrap img{width:100%;border-radius:6px;}
@@ -247,14 +249,14 @@ nav{
 .deck-card-img.disabled{cursor:not-allowed;opacity:.45;pointer-events:none;}
 .deck-count{font-size:.68rem;color:rgba(255,255,255,.45);font-weight:700;}
 
-/* Drawn card area — image-first */
+/* Drawn card area — large and prominent */
 .drawn-card-area{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
 .drawn-card-img-wrap{
-  width:86px;
-  border-radius:9px;
+  width:108px;
+  border-radius:10px;
   display:flex;flex-direction:column;align-items:center;
-  box-shadow:0 5px 18px rgba(0,0,0,.45);
-  border:2px solid rgba(255,255,255,.22);
+  box-shadow:0 6px 22px rgba(0,0,0,.55);
+  border:2px solid rgba(255,255,255,.28);
   overflow:hidden;
   animation:flipIn .35s ease-out;
 }
@@ -267,20 +269,20 @@ nav{
 @keyframes flipIn{from{transform:rotateY(90deg) scale(.8);opacity:0}to{transform:rotateY(0) scale(1);opacity:1}}
 /* Legacy drawn-card for animals (emoji only) */
 .drawn-card{
-  width:86px;border-radius:9px;
+  width:108px;border-radius:10px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-size:2rem;box-shadow:0 5px 18px rgba(0,0,0,.4);
-  border:2px solid rgba(255,255,255,.25);gap:.15rem;
-  padding:.7rem .4rem;
+  font-size:2.4rem;box-shadow:0 6px 22px rgba(0,0,0,.5);
+  border:2px solid rgba(255,255,255,.25);gap:.2rem;
+  padding:.9rem .4rem;
   animation:flipIn .35s ease-out;
 }
 .drawn-card-label{font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;opacity:.7;}
 .drawn-card-empty{
-  width:86px;border-radius:9px;
+  width:108px;border-radius:10px;
   border:2px dashed rgba(255,255,255,.18);
   display:flex;align-items:center;justify-content:center;
   color:rgba(255,255,255,.25);font-size:.72rem;text-align:center;
-  line-height:1.4;padding:1.6rem .4rem;
+  line-height:1.4;padding:2rem .4rem;
 }
 .game-message{
   text-align:center;color:rgba(255,255,255,.82);
@@ -426,7 +428,7 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
   .warren-grid{grid-template-columns:repeat(4,1fr);}
   nav .nav-links{display:none;}
   .card-types{grid-template-columns:1fr;}
-  .warren-color{min-height:130px;}
+  .warren-color{min-height:100px;}
 }
 </style>
 </head>
@@ -1047,7 +1049,7 @@ function warrenHTML(p) {
       if(i<=n){
         // Use tracked variant if available, otherwise fall back to position index
         const variantNum = (p.variants[c][i-1]) || i;
-        cells += `<img src="${m.prefix}${variantNum}_FRONT_CARD.png"
+        cells += `<img src="images/${m.prefix}${variantNum}.png"
                        class="warren-bunny-img"
                        alt="${m.name} Bunny ${variantNum}"
                        onerror="this.style.background='${m.hex}';this.style.opacity='0.6'">`;
@@ -1059,7 +1061,7 @@ function warrenHTML(p) {
     // Bond card overlay (shown when bonded)
     const bondOverlay = bd ? `
       <div class="bond-overlay-wrap">
-        <img src="BOND_FRONT_CARD.png" alt="Bunny Bond">
+        <img src="images/bunnybondcard.png" alt="Bunny Bond">
       </div>
       <div class="bond-shield">🛡️</div>` : '';
 
@@ -1092,19 +1094,19 @@ function drawnCardHTML(card) {
   if(card.type==='bunny') {
     const m=CM[card.color];
     const vn = card.variant || 1;
-    imgSrc = `${m.prefix}${vn}_FRONT_CARD.png`;
+    imgSrc = `images/${m.prefix}${vn}.png`;
     label  = `${m.name} Bunny`;
     bgColor= m.light;
   } else if(card.type==='carrot') {
-    imgSrc = 'CARROT_FRONT_CARD.png';
+    imgSrc = 'images/carrotcard.png';
     label  = 'Carrot';
     bgColor= '#fff8ee';
   } else if(card.type==='bond') {
-    imgSrc = 'BOND_FRONT_CARD.png';
+    imgSrc = 'images/bunnybondcard.png';
     label  = 'Bunny Bond';
     bgColor= '#fff0f8';
   } else if(card.type==='fox') {
-    imgSrc = 'WILD_FRONT_CARD.png';
+    imgSrc = 'images/foxcard.png';
     label  = 'Fox!';
     bgColor= '#fff4ee';
   }
@@ -1122,7 +1124,7 @@ function drawnCardHTML(card) {
 function carrotBadgeHTML(hasCarrot) {
   if(hasCarrot) {
     return `<span class="carrot-inv" title="Saved Carrot — ready to steal!">
-      <img src="CARROT_FRONT_CARD.png" alt="carrot"> ×1 Saved
+      <img src="images/carrotcard.png" alt="carrot"> ×1 Saved
     </span>`;
   }
   return `<span class="carrot-inv empty" title="No saved Carrot">🥕 ×0</span>`;
@@ -1201,7 +1203,7 @@ function render() {
 
     <div class="game-middle">
       <div class="deck-pile">
-        <img src="BACK_CARD.png"
+        <img src="images/Back.png"
              alt="Draw"
              class="deck-card-img ${G.phase!=='waiting'||G.turn!=='player'?'disabled':''}"
              onclick="playerDraw()"
