@@ -144,18 +144,23 @@ nav{
   margin-bottom:.55rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
 }
 
-/* ══ WARREN — 4 colour rows × 4 card-slots each ══════
-   Each row is tinted in that colour so players know
-   where cards belong — no text labels needed.
+/* ══ WARREN — 2 paired rows (Red|Blue, Green|Orange) ══
+   Each pair sits side-by-side. Inside each pair, a color
+   group shows its 4 bunny slots + 1 bond slot.
    ════════════════════════════════════════════════════ */
 .warren-area{
-  display:flex;flex-direction:column;gap:.3rem;
+  display:flex;flex-direction:column;gap:.4rem;
   margin-bottom:.45rem;
 }
 
-/* One colour row — background set inline per color */
+/* One pair row holds TWO colour groups */
+.warren-pair{
+  display:grid;grid-template-columns:1fr 1fr;gap:.4rem;
+}
+
+/* One colour group: label + card row */
 .warren-row{
-  display:flex;align-items:center;gap:.28rem;
+  display:flex;flex-direction:column;gap:.2rem;
   border-radius:8px;padding:.28rem .32rem;
   border:2px solid transparent;
   position:relative;
@@ -176,40 +181,73 @@ nav{
   border-color:rgba(255,215,0,.55)!important;
 }
 
-/* The 4 card slots */
+/* Color name label at top of each group */
+.warren-row-label{
+  font-size:.52rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.06em;opacity:.7;
+}
+
+/* The 5 card slots: 4 bunnies + 1 bond */
 .warren-slots{
-  display:flex;gap:.25rem;flex:1;
+  display:flex;gap:.22rem;align-items:center;
+}
+
+/* Divider between the 4 bunny slots and the bond slot */
+.warren-bond-divider{
+  width:1px;height:80%;
+  background:rgba(255,255,255,.15);
+  flex-shrink:0;margin:0 .1rem;
+}
+.warren-bond-divider--ai{
+  width:1px;height:80%;
+  background:rgba(255,255,255,.15);
+  flex-shrink:0;margin:0 .08rem;
 }
 
 /* ── PLAYER card slots ────────────────────────────── */
 .ws-card{
-  width:46px;height:64px;
+  width:40px;height:56px;
   border-radius:5px;object-fit:contain;
   display:block;transition:transform .18s;flex-shrink:0;
 }
 .ws-card:hover{transform:scale(1.07);}
 .ws-empty{
-  width:46px;height:64px;
+  width:40px;height:56px;
   border-radius:5px;flex-shrink:0;
-  /* bg + border set inline */
+}
+/* Bond slot (5th) — slightly narrower */
+.ws-bond-slot{
+  width:34px;height:48px;
+  border-radius:5px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.ws-bond-slot img{
+  width:100%;height:100%;object-fit:contain;
+  border-radius:4px;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.55));
 }
 
 /* ── AI card slots (smaller) ─────────────────────── */
 .ws-card--ai{
-  width:33px;height:46px;
+  width:28px;height:39px;
   border-radius:4px;object-fit:contain;
   display:block;transition:transform .18s;flex-shrink:0;
 }
 .ws-card--ai:hover{transform:scale(1.07);}
 .ws-empty--ai{
-  width:33px;height:46px;
+  width:28px;height:39px;
   border-radius:4px;flex-shrink:0;
 }
-
-/* Bond card at end of row */
-.row-bond{width:32px;flex-shrink:0;filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));}
-.row-bond--ai{width:23px;flex-shrink:0;filter:drop-shadow(0 1px 4px rgba(0,0,0,.55));}
-.row-bond img,.row-bond--ai img{width:100%;border-radius:4px;display:block;}
+.ws-bond-slot--ai{
+  width:24px;height:33px;
+  border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.ws-bond-slot--ai img{
+  width:100%;height:100%;object-fit:contain;
+  border-radius:3px;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.5));
+}
 
 /* Shield badge */
 .row-shield{
@@ -221,8 +259,9 @@ nav{
 /* "1 more!" hint */
 .one-more{
   font-size:.5rem;color:rgba(255,215,0,.95);
-  font-weight:800;white-space:nowrap;margin-left:.15rem;
+  font-weight:800;white-space:nowrap;
   text-shadow:0 1px 3px rgba(0,0,0,.6);
+  margin-top:.1rem;display:block;text-align:center;
 }
 
 /* ── INVENTORY BADGES ─────────────────────────────── */
@@ -1124,22 +1163,22 @@ function endAiTurn() {
 // ── Warren HTML — 4 colour rows × 4 slots ────────
 // isAi → smaller card sizes
 function warrenHTML(p, isAi) {
-  const cardCls  = isAi ? 'ws-card--ai'   : 'ws-card';
-  const emptyCls = isAi ? 'ws-empty--ai'  : 'ws-empty';
-  const bondCls  = isAi ? 'row-bond--ai'  : 'row-bond';
+  const cardCls    = isAi ? 'ws-card--ai'      : 'ws-card';
+  const emptyCls   = isAi ? 'ws-empty--ai'     : 'ws-empty';
+  const bondSlotCls= isAi ? 'ws-bond-slot--ai' : 'ws-bond-slot';
+  const dividerCls = isAi ? 'warren-bond-divider--ai' : 'warren-bond-divider';
+  const radius     = isAi ? '4' : '5';
 
-  return COLORS.map(c => {
+  // Build one colour-group block
+  function colorBlock(c) {
     const n  = p.bunnies[c];
     const bd = p.bonds[c];
     const m  = CM[c];
     const isThree = (n === 3);
 
-    // Row background: muted tint of the color
-    const rowBg = `background:${m.hex}20;`;
-    // Bonded row gets a slightly warmer tint
-    const rowStyle = bd
-      ? `style="${rowBg}border-color:rgba(255,215,0,.6)"`
-      : `style="${rowBg}"`;
+    const rowBg = bd
+      ? `background:${m.hex}20;border-color:rgba(255,215,0,.6)`
+      : `background:${m.hex}18`;
 
     const rowClasses = [
       'warren-row',
@@ -1147,7 +1186,7 @@ function warrenHTML(p, isAi) {
       isThree ? 'three-glow' : '',
     ].filter(Boolean).join(' ');
 
-    // 4 card slots — filled with image or muted colored empty slot
+    // 4 bunny slots
     let slots = '';
     for(let i = 1; i <= 4; i++) {
       if(i <= n) {
@@ -1155,27 +1194,43 @@ function warrenHTML(p, isAi) {
         slots += `<img src="images/${m.prefix}${vn}.png"
                        class="${cardCls}"
                        alt="${m.name} Bunny"
-                       onerror="this.style.background='${m.hex}44';this.style.borderRadius='4px'">`;
+                       onerror="this.style.background='${m.hex}44';this.style.borderRadius='${radius}px'">`;
       } else {
-        // Empty slot: same color tint, no border or text
         slots += `<div class="${emptyCls}"
-                       style="background:${m.hex}30;border-radius:${isAi?'4':'5'}px;"></div>`;
+                       style="background:${m.hex}28;border-radius:${radius}px;"></div>`;
       }
     }
 
-    // Bond card inline at end of row when bonded
-    const bondEl = bd
-      ? `<div class="${bondCls}"><img src="images/bunnybondcard.png" alt="Bond"></div>
-         <div class="row-shield">🛡️</div>` : '';
+    // 5th slot — bond card if bonded, empty placeholder if not
+    const bondSlot = bd
+      ? `<div class="${bondSlotCls}"><img src="images/bunnybondcard.png" alt="Bond"></div>`
+      : `<div class="${bondSlotCls}" style="background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.12);border-radius:${radius}px;opacity:.5;"></div>`;
 
-    const hint = isThree ? `<span class="one-more">✨+1</span>` : '';
+    const shield = bd ? `<div class="row-shield">🛡️</div>` : '';
+    const hint   = isThree ? `<span class="one-more">✨ ONE MORE!</span>` : '';
 
-    return `<div class="${rowClasses}" ${rowStyle}
+    return `<div class="${rowClasses}" style="${rowBg}"
       title="${m.name}: ${n}/4${bd?' — Bonded 🛡️':''}${isThree?' — ONE MORE TO WIN!':''}">
-      <div class="warren-slots">${slots}</div>
-      ${hint}${bondEl}
+      <span class="warren-row-label" style="color:${m.hex}">${m.name}</span>
+      <div class="warren-slots">
+        ${slots}
+        <div class="${dividerCls}"></div>
+        ${bondSlot}
+      </div>
+      ${shield}${hint}
     </div>`;
-  }).join('');
+  }
+
+  // Two paired rows: [Red, Blue] and [Green, Orange]
+  return `
+    <div class="warren-pair">
+      ${colorBlock('red')}
+      ${colorBlock('blue')}
+    </div>
+    <div class="warren-pair">
+      ${colorBlock('green')}
+      ${colorBlock('orange')}
+    </div>`;
 }
 
 // ── Drawn card ────────────────────────────────────
@@ -1184,7 +1239,7 @@ function drawnCardHTML(card) {
     const canDraw = G.phase==='waiting' && G.turn==='player';
     return `<div class="drawn-card-empty"
                  ${canDraw?'onclick="playerDraw()" title="Click to draw"':'style="cursor:default;opacity:.4"'}>
-      Draw<br>a card
+      ${canDraw ? '👆 Tap deck<br>or here to draw' : 'Draw<br>a card'}
     </div>`;
   }
   if(card.type==='animal') {
@@ -1224,7 +1279,7 @@ function actionsHTML() {
   const ph=G.phase;
 
   if(ph==='waiting'&&G.turn==='player')
-    return `<div class="ai-thinking-txt" style="opacity:.55;font-size:.68rem;">👆 Tap deck<br>or draw area</div>`;
+    return `<button class="game-btn" onclick="playerDraw()">🃏 Draw Card</button>`;
 
   if(ph==='ai')   return `<div class="ai-thinking-txt">🤖 AI is thinking…</div>`;
   if(ph==='auto') return `<button class="game-btn" disabled>⏳</button>`;
