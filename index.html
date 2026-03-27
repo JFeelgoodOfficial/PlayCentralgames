@@ -862,6 +862,205 @@ footer{background:var(--forest-dark);color:rgba(255,255,255,.65);padding:2.5rem 
 
 <!-- ═══ GAME ENGINE ════════════════════════════════════════════════════ -->
 <script>
+// ╔══════════════════════════════════════════════════╗
+// ║           AUDIO ENGINE — Web Audio API          ║
+// ╚══════════════════════════════════════════════════╝
+
+let _ctx = null;
+let _bgPlaying = false;
+let _bgTimeout = null;
+let _bgGain = null;
+let _melodyStarted = false;
+
+function ac() {
+  if(!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if(_ctx.state === 'suspended') _ctx.resume();
+  return _ctx;
+}
+
+// Generic tone helper
+function tone(freq, type, start, dur, vol, freqEnd) {
+  const ctx = ac();
+  const osc = ctx.createOscillator();
+  const g   = ctx.createGain();
+  osc.connect(g); g.connect(ctx.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, start);
+  if(freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, start + dur);
+  g.gain.setValueAtTime(0.001, start);
+  g.gain.linearRampToValueAtTime(vol, start + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  osc.start(start);
+  osc.stop(start + dur + 0.05);
+}
+
+// White/brown noise burst helper
+function noiseBurst(start, dur, vol, cutoff) {
+  const ctx = ac();
+  const len = Math.ceil(ctx.sampleRate * dur);
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  let last = 0;
+  for(let i = 0; i < len; i++) {
+    const white = Math.random() * 2 - 1;
+    last = (last + 0.02 * white) / 1.02; // brown-ish
+    d[i] = last * 18;
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const filt = ctx.createBiquadFilter();
+  filt.type = 'lowpass'; filt.frequency.value = cutoff;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(vol, start);
+  g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+  src.start(start); src.stop(start + dur + 0.05);
+}
+
+// ── Sound Effects ─────────────────────────────────
+
+function sfxAnimal() {
+  const t = ac().currentTime;
+  noiseBurst(t, 0.28, 0.55, 180);          // soft farmyard thud
+  tone(90,  'sine',     t,      0.22, 0.14); // low grumble
+  tone(130, 'sine',     t+0.05, 0.14, 0.07); // tiny overtone
+}
+
+function sfxCarrotDrawn() {
+  const t = ac().currentTime;
+  // Bright bubbly boing
+  tone(380, 'sine', t,      0.28, 0.22, 820);
+  tone(760, 'sine', t+0.05, 0.18, 0.09, 1400);
+  tone(1200,'sine', t+0.13, 0.12, 0.06);
+}
+
+function sfxCarrotUsed() {
+  const t = ac().currentTime;
+  // Sneaky swipe + impact
+  tone(600, 'sawtooth', t,      0.28, 0.18, 140);
+  tone(320, 'triangle', t+0.22, 0.22, 0.16);
+  tone(160, 'sine',     t+0.28, 0.18, 0.10);
+}
+
+function sfxFox() {
+  const t = ac().currentTime;
+  // Three ominous low growl pulses
+  tone(55,  'sawtooth', t,      0.35, 0.18);
+  tone(70,  'sawtooth', t+0.18, 0.35, 0.22);
+  tone(90,  'sawtooth', t+0.38, 0.38, 0.26);
+  noiseBurst(t+0.40, 0.30, 0.35, 400);
+  // Sharp howl
+  tone(900, 'square',   t+0.62, 0.32, 0.20, 280);
+  tone(450, 'sine',     t+0.72, 0.28, 0.12);
+}
+
+function sfxBondDrawn() {
+  const t = ac().currentTime;
+  // Soft sweet chime — C E G ascending
+  const notes = [523.25, 659.25, 783.99, 1046.5];
+  notes.forEach((f, i) => {
+    tone(f,   'sine',     t + i*0.11, 0.55, 0.16);
+    tone(f*2, 'sine',     t + i*0.11, 0.30, 0.05); // sparkle overtone
+  });
+}
+
+function sfxBondUsed() {
+  const t = ac().currentTime;
+  // Ascending shield shimmer
+  const notes = [523.25, 587.33, 659.25, 783.99, 1046.5, 1318.5];
+  notes.forEach((f, i) => {
+    tone(f,   'sine',     t + i*0.065, 0.45 - i*0.04, 0.17);
+    tone(f*1.5,'sine',    t + i*0.065, 0.25,           0.05);
+  });
+  noiseBurst(t + 0.35, 0.20, 0.12, 3000); // sparkle finish
+}
+
+function sfxWin() {
+  const t = ac().currentTime;
+  // Triumphant fanfare — C C C Ab C Ab C
+  const melody = [
+    [523.25,0,    0.14], [523.25,0.15,0.11], [523.25,0.27,0.11],
+    [415.30,0.39,0.17],  [523.25,0.57,0.32],
+    [415.30,0.90,0.17],  [523.25,1.08,0.70],
+  ];
+  melody.forEach(([f, s, d]) => {
+    tone(f,     'triangle', t+s, d,    0.24);
+    tone(f*1.5, 'sine',     t+s, d,    0.09);
+    tone(f*2,   'sine',     t+s, d*0.6,0.05);
+  });
+  // Final warm chord
+  [523.25, 659.25, 783.99].forEach((f,i) => {
+    tone(f, 'sine', t+1.5+i*0.04, 1.2, 0.15);
+  });
+}
+
+// ── Background melody ─────────────────────────────
+// Gentle pentatonic music-box loop
+const _BG_NOTES = [
+  261.63, 293.66, 329.63, 392.00, 440.00,   // C4 D4 E4 G4 A4
+  523.25, 587.33, 659.25, 783.99, 880.00,   // C5 D5 E5 G5 A5
+];
+// Indices into _BG_NOTES — a 32-step pentatonic melody
+const _BG_PAT = [
+  2,3,4,5, 4,3,2,1,
+  2,3,5,6, 5,4,3,2,
+  3,4,5,7, 6,5,4,3,
+  2,1,2,3, 4,3,2,0,
+];
+let _bgIdx = 0;
+const _BG_STEP = 340; // ms per note
+
+function startBgMelody() {
+  if(_bgPlaying) return;
+  _bgPlaying = true;
+  const ctx = ac();
+  _bgGain = ctx.createGain();
+  _bgGain.gain.setValueAtTime(0.001, ctx.currentTime);
+  _bgGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 3.0); // gentle fade-in
+  _bgGain.connect(ctx.destination);
+  _bgIdx = 0;
+  _tickBg();
+}
+
+function _tickBg() {
+  if(!_bgPlaying || !_bgGain) return;
+  const ctx = ac();
+  const freq = _BG_NOTES[_BG_PAT[_bgIdx % _BG_PAT.length]];
+  const t = ctx.currentTime;
+  const dur = (_BG_STEP / 1000) * 0.80;
+
+  // Music-box sine + soft triangle for warmth
+  const osc1 = ctx.createOscillator();
+  const osc2 = ctx.createOscillator();
+  const env  = ctx.createGain();
+  osc1.type = 'sine';     osc1.frequency.value = freq;
+  osc2.type = 'triangle'; osc2.frequency.value = freq;
+  env.gain.setValueAtTime(0.001, t);
+  env.gain.linearRampToValueAtTime(1.0, t + 0.018);
+  env.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  osc1.connect(env); osc2.connect(env); env.connect(_bgGain);
+  osc1.start(t); osc1.stop(t + dur + 0.05);
+  osc2.start(t); osc2.stop(t + dur + 0.05);
+
+  _bgIdx++;
+  _bgTimeout = setTimeout(_tickBb, _BG_STEP);
+}
+// alias to avoid typo risk
+function _tickBb() { _tickBg(); }
+
+function stopBgMelody(immediate) {
+  _bgPlaying = false;
+  if(_bgTimeout) { clearTimeout(_bgTimeout); _bgTimeout = null; }
+  if(_bgGain) {
+    const ctx = ac();
+    const fadeTime = immediate ? 0.05 : 1.8;
+    _bgGain.gain.cancelScheduledValues(ctx.currentTime);
+    _bgGain.gain.setValueAtTime(_bgGain.gain.value, ctx.currentTime);
+    _bgGain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + fadeTime);
+    const g = _bgGain; _bgGain = null;
+    setTimeout(() => { try { g.disconnect(); } catch(e){} }, (fadeTime + 0.2) * 1000);
+  }
+}
 // ╔══════════════════════════════════════╗
 // ║   BUNNY WARREN — DIGITAL GAME v3.0  ║
 // ╚══════════════════════════════════════╝
@@ -915,6 +1114,8 @@ function mkPlayer() {
 
 // ── Game init ─────────────────────────────────────
 function startGame() {
+  stopBgMelody();
+  _melodyStarted = false;
   G = {
     deck: buildDeck(),
     discard: [],
@@ -949,12 +1150,14 @@ function eligibleBondGroups() {
 // ── Flash the draw slot then draw ────────────────
 function flashAndDraw(el) {
   if(G.phase!=='waiting'||G.turn!=='player') return;
+  if(!_melodyStarted){ _melodyStarted=true; startBgMelody(); }
   el.classList.add('flash');
   el.style.pointerEvents='none';
   setTimeout(playerDraw, 120);
 }
 function deckTap() {
   if(G.phase!=='waiting'||G.turn!=='player') return;
+  if(!_melodyStarted){ _melodyStarted=true; startBgMelody(); }
   const slot = document.getElementById('draw-empty-slot');
   if(slot) { slot.classList.add('flash'); slot.style.pointerEvents='none'; }
   setTimeout(playerDraw, 120);
@@ -968,6 +1171,7 @@ function playerDraw() {
 
   if(card.type==='animal') {
     discardCard(card);
+    sfxAnimal();
     addLog(`🐾 Drew a ${card.name} — discarded. End of turn.`);
     G.phase='auto'; render(); setTimeout(endPlayerTurn,1600);
     return;
@@ -1045,6 +1249,7 @@ function doPlayerBunny(color, variant) {
 
 // ── Carrot draw ───────────────────────────────────
 function handleCarrotDraw() {
+  sfxCarrotDrawn();
   if(G.player.carrot) {
     // Already have one saved — must use drawn one immediately
     addLog('🥕 Drew a Carrot! Already have one saved. Steal from AI now:');
@@ -1065,6 +1270,7 @@ function handleCarrotDraw() {
 
 // ── Bond draw ─────────────────────────────────────
 function handleBondDraw() {
+  sfxBondDrawn();
   const elig = eligibleBondGroups();
   if(elig.length===0) {
     // No eligible groups — auto-save if room
@@ -1087,6 +1293,7 @@ function handleBondDraw() {
 
 // ── Fox ───────────────────────────────────────────
 function doFox(by) {
+  sfxFox();
   const vic=by==='player'?'ai':'player';
   const vn=vic==='player'?'Your':"AI's";
   let wiped=[];
@@ -1124,6 +1331,7 @@ function selectScTarget(color) {
   const stolen=G.ai.variants[color].splice(0);
   stolen.forEach(v=>G.player.variants[color].push(v));
   discardCard({type:'carrot'});
+  sfxCarrotUsed();
   addLog(`🥕 Used saved Carrot! Stole ${n} ${CM[color].name} bunnies from AI!`);
   if(!checkWin('player')) {
     const pend=G.pending; G.pending=null;
@@ -1146,6 +1354,7 @@ function selectCarrotTarget(color) {
   stolen.forEach(v=>G.player.variants[color].push(v));
   G.player.carrot=false;
   discardCard({type:'carrot'});
+  sfxCarrotUsed();
   addLog(`🥕 Carrot used! Stole ${n} ${CM[color].name} bunnies from AI!`);
   if(!checkWin('player')) { G.phase='auto'; render(); setTimeout(endPlayerTurn,1500); }
 }
@@ -1165,6 +1374,7 @@ function skipSavedBond() {
 function selectSbTarget(color) {
   if(G.player.bunnies[color]<2||G.player.bonds[color]) return;
   G.player.bonds[color]=true;
+  sfxBondUsed();
   addLog(`💕 Saved Bond used! ${CM[color].name} bunnies are now protected!`);
   const pend=G.pending; G.pending=null;
   G.drawn=pend;
@@ -1188,6 +1398,7 @@ function selectBondColor(color) {
   if(G.player.bunnies[color]<2||G.player.bonds[color]) return;
   G.player.bonds[color]=true;
   discardCard(G.drawn); G.drawn=null;
+  sfxBondUsed();
   addLog(`💕 Bunny Bond placed! ${CM[color].name} bunnies are protected!`);
   G.phase='auto'; render(); setTimeout(endPlayerTurn,1400);
 }
@@ -1197,6 +1408,8 @@ function checkWin(who) {
   const won=COLORS.some(c=>G[who].bunnies[c]>=4);
   if(won) {
     G.winner=who; G.phase='win';
+    stopBgMelody();
+    if(who==='player') sfxWin();
     addLog(who==='player'?'🏆 YOU WIN! Bunny Warren declared!':'😢 AI wins! Better luck next time!');
     render(); return true;
   }
@@ -1223,6 +1436,7 @@ function aiTurn() {
 
     if(card.type==='animal') {
       discardCard(card);
+      sfxAnimal();
       addLog(`🤖🐾 AI drew a ${card.name} — discarded.`);
       endAiTurn();
 
@@ -1244,6 +1458,7 @@ function aiTurn() {
         if(t&&G.player.bunnies[t]>0) {
           stealFrom('player',t);
           discardCard(card);
+          sfxCarrotUsed();
           addLog(`🤖🥕 AI (already had saved Carrot) used new one to steal your ${CM[t].name} bunnies!`);
           if(!checkWin('ai')) endAiTurn();
         } else { discardCard(card); endAiTurn(); }
@@ -1252,6 +1467,7 @@ function aiTurn() {
         if(t&&G.player.bunnies[t]>=2&&Math.random()<.55) {
           stealFrom('player',t);
           discardCard(card);
+          sfxCarrotUsed();
           addLog(`🤖🥕 AI used Carrot to steal your ${CM[t].name} bunnies!`);
           if(!checkWin('ai')) endAiTurn();
         } else {
