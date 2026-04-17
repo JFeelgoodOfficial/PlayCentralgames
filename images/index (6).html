@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bunny Warren</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #E8703A;
+    --green: #4DBD4B;
+    --red: #BE3B3B;
+    --purple: #6066BE;
+    --cream: #FFF8F0;
+    --dark: #2A1F1A;
+    --card-w: min(80px, 18vw);
+    --card-h: calc(var(--card-w) * 1.4);
+    --gap: min(10px, 2vw);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Decorative background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(232,112,58,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(77,189,75,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 10%, rgba(96,102,190,0.07) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 20px 16px 8px;
+    width: 100%;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 900;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .logo span {
+    display: block;
+    font-size: 0.4em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 2px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px 0 14px;
+    position: relative; z-index: 1;
+  }
+
+  .stat {
+    background: white;
+    border-radius: 12px;
+    padding: 6px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+    min-width: 72px;
+  }
+
+  .stat-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+
+  /* Warrens collected */
+  .warrens {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 0 0 14px;
+    position: relative; z-index: 1;
+  }
+
+  .warren-pip {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: all 0.4s cubic-bezier(.34,1.56,.64,1);
+    transform: scale(0.85);
+  }
+
+  .warren-pip.orange { border-color: var(--orange); color: var(--orange); }
+  .warren-pip.green  { border-color: var(--green);  color: var(--green);  }
+  .warren-pip.red    { border-color: var(--red);    color: var(--red);    }
+  .warren-pip.purple { border-color: var(--purple); color: var(--purple); }
+
+  .warren-pip.collected {
+    transform: scale(1);
+    color: white !important;
+  }
+  .warren-pip.collected.orange { background: var(--orange); }
+  .warren-pip.collected.green  { background: var(--green);  }
+  .warren-pip.collected.red    { background: var(--red);    }
+  .warren-pip.collected.purple { background: var(--purple); }
+
+  /* Grid */
+  .grid-wrap {
+    position: relative; z-index: 1;
+    padding: 0 10px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, var(--card-w));
+    gap: var(--gap);
+    justify-content: center;
+  }
+
+  /* Card */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    perspective: 600px;
+    cursor: pointer;
+  }
+
+  .card-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+    border-radius: 10px;
+  }
+
+  .card.flipped .card-inner,
+  .card.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute; inset: 0;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+  }
+
+  .card-back {
+    background: white;
+    border: 2px solid rgba(0,0,0,0.06);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .card-back img {
+    width: 88%; height: 88%;
+    object-fit: contain;
+  }
+
+  .card-front {
+    transform: rotateY(180deg);
+    background: white;
+    border: 2px solid rgba(0,0,0,0.06);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .card-front img {
+    width: 88%; height: 88%;
+    object-fit: contain;
+  }
+
+  .card.matched .card-front {
+    border-color: rgba(0,0,0,0.1);
+    box-shadow: 0 0 0 3px var(--match-color, #4DBD4B), 0 4px 14px rgba(0,0,0,0.12);
+    animation: matchPulse 0.5s ease-out forwards;
+  }
+
+  .card.orange.matched { --match-color: var(--orange); }
+  .card.green.matched  { --match-color: var(--green);  }
+  .card.red.matched    { --match-color: var(--red);    }
+  .card.purple.matched { --match-color: var(--purple); }
+
+  @keyframes matchPulse {
+    0%  { transform: rotateY(180deg) scale(1); }
+    40% { transform: rotateY(180deg) scale(1.08); }
+    100%{ transform: rotateY(180deg) scale(1); }
+  }
+
+  .card:hover:not(.flipped):not(.matched) .card-back {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+    transform: translateY(-2px);
+  }
+  .card:hover:not(.flipped):not(.matched) .card-inner {
+    filter: brightness(1.02);
+  }
+
+  /* Win overlay */
+  .win-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(42,31,26,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .win-overlay.active { display: flex; }
+
+  .win-box {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 40px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    max-width: 340px;
+    width: 90%;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .win-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .win-score {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .win-emojis {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    letter-spacing: 4px;
+  }
+
+  .btn {
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.18s;
+    margin: 4px;
+  }
+
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+  .btn:active { transform: none; }
+  .btn.secondary { background: #f0ebe6; color: var(--dark); }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    top: -10px;
+    z-index: 200;
+    border-radius: 2px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  footer {
+    position: relative; z-index: 1;
+    padding: 10px 0 16px;
+    display: flex; gap: 10px; justify-content: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 380px) {
+    :root { --card-w: 72px; --gap: 7px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span>✦ Play ✦</span>
+    Bunny Warren
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Flips</div>
+    <div class="stat-value" id="flipCount">0</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Pairs</div>
+    <div class="stat-value" id="pairCount">0 / 8</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Time</div>
+    <div class="stat-value" id="timer">0:00</div>
+  </div>
+</div>
+
+<div class="warrens">
+  <div class="warren-pip orange" id="pip-orange" title="Orange Warren">🐇</div>
+  <div class="warren-pip green"  id="pip-green"  title="Green Warren">🐇</div>
+  <div class="warren-pip red"    id="pip-red"    title="Red Warren">🐇</div>
+  <div class="warren-pip purple" id="pip-purple" title="Purple Warren">🐇</div>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  <button class="btn secondary" onclick="newGame()">New Game</button>
+</footer>
+
+<div class="win-overlay" id="winOverlay">
+  <div class="win-box">
+    <div class="win-emojis">🐇🥕🐇</div>
+    <div class="win-title">Warren<br>Complete!</div>
+    <div class="win-score" id="winScore"></div>
+    <button class="btn" onclick="newGame()">Play Again</button>
+  </div>
+</div>
+
+<script>
+// Card definitions: pose 1-4, color orange/green/red/purple
+const COLORS = ['orange','green','red','purple'];
+const POSES  = [1,2,3,4];
+const PREFIX = { orange:'OB', green:'GB', red:'RB', purple:'PB' };
+
+// Build 8 pairs: match by POSE (same number, different color)
+// Each pose has 4 colors; pick 2 pairs of colors per pose
+// Pair scheme: (orange,green), (red,purple) for poses 1,2; (orange,red),(green,purple) for 3,4
+const PAIR_GROUPS = [
+  [['orange',1],['green',1]],
+  [['red',1],['purple',1]],
+  [['orange',2],['red',2]],
+  [['green',2],['purple',2]],
+  [['orange',3],['purple',3]],
+  [['green',3],['red',3]],
+  [['orange',4],['green',4]],
+  [['red',4],['purple',4]],
+];
+
+let cards = [];
+let flipped = [];
+let matched = 0;
+let flips = 0;
+let timerInterval = null;
+let startTime = null;
+let locked = false;
+let warrenCount = {orange:0,green:0,red:0,purple:0};
+
+function imgPath(color, pose) {
+  return `${PREFIX[color]}${pose}_FRONT_CARD.png`;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function buildDeck() {
+  const deck = [];
+  let id = 0;
+  PAIR_GROUPS.forEach(([a,b], pairIdx) => {
+    deck.push({ id: id++, pairId: pairIdx, color: a[0], pose: a[1] });
+    deck.push({ id: id++, pairId: pairIdx, color: b[0], pose: b[1] });
+  });
+  return shuffle(deck);
+}
+
+function newGame() {
+  clearInterval(timerInterval);
+  startTime = null;
+  flips = 0;
+  matched = 0;
+  flipped = [];
+  locked = false;
+  warrenCount = {orange:0,green:0,red:0,purple:0};
+  updateStats();
+  resetWarrenPips();
+  document.getElementById('winOverlay').classList.remove('active');
+  cards = buildDeck();
+  renderGrid();
+}
+
+function resetWarrenPips() {
+  COLORS.forEach(c => {
+    const pip = document.getElementById('pip-'+c);
+    pip.classList.remove('collected');
+  });
+}
+
+function updateStats() {
+  document.getElementById('flipCount').textContent = flips;
+  document.getElementById('pairCount').textContent = `${matched} / 8`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  cards.forEach(card => {
+    const el = document.createElement('div');
+    el.className = `card ${card.color}`;
+    el.dataset.id = card.id;
+    el.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-back">
+          <img src="BACK_CARD.png" alt="card back" loading="lazy">
+        </div>
+        <div class="card-face card-front">
+          <img src="${imgPath(card.color, card.pose)}" alt="${card.color} bunny pose ${card.pose}" loading="lazy">
+        </div>
+      </div>`;
+    el.addEventListener('click', () => onCardClick(card, el));
+    grid.appendChild(el);
+  });
+}
+
+function onCardClick(card, el) {
+  if (locked) return;
+  if (el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  if (!startTime) startTimer();
+
+  el.classList.add('flipped');
+  flipped.push({ card, el });
+  flips++;
+  updateStats();
+
+  if (flipped.length === 2) {
+    locked = true;
+    const [a, b] = flipped;
+    if (a.card.pairId === b.card.pairId) {
+      // Match!
+      setTimeout(() => {
+        a.el.classList.add('matched');
+        b.el.classList.add('matched');
+        matched++;
+        updateStats();
+        // Track warren by color
+        checkWarren(a.card.color);
+        checkWarren(b.card.color);
+        flipped = [];
+        locked = false;
+        if (matched === 8) showWin();
+      }, 300);
+    } else {
+      setTimeout(() => {
+        a.el.classList.remove('flipped');
+        b.el.classList.remove('flipped');
+        flipped = [];
+        locked = false;
+      }, 900);
+    }
+  }
+}
+
+function checkWarren(color) {
+  warrenCount[color]++;
+  // Each color appears exactly twice across all pairs, so at warrenCount=2 it's complete
+  if (warrenCount[color] >= 2) {
+    const pip = document.getElementById('pip-'+color);
+    if (!pip.classList.contains('collected')) {
+      pip.classList.add('collected');
+    }
+  }
+}
+
+function startTimer() {
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(s / 60);
+    document.getElementById('timer').textContent = `${m}:${String(s%60).padStart(2,'0')}`;
+  }, 500);
+}
+
+function showWin() {
+  clearInterval(timerInterval);
+  const s = Math.floor((Date.now() - startTime) / 1000);
+  const m = Math.floor(s / 60);
+  const timeStr = `${m}:${String(s%60).padStart(2,'0')}`;
+  document.getElementById('winScore').textContent =
+    `${flips} flips · ${timeStr}`;
+  document.getElementById('winOverlay').classList.add('active');
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const colors = ['#E8703A','#4DBD4B','#BE3B3B','#6066BE','#FFD700','#FF69B4'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.width = (8+Math.random()*8) + 'px';
+      el.style.height = (8+Math.random()*8) + 'px';
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      el.style.animationDuration = (1.5+Math.random()*2) + 's';
+      el.style.animationDelay = Math.random()*0.5 + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }, i * 30);
+  }
+}
+
+newGame();
+</script>
+</body>
+</html>
