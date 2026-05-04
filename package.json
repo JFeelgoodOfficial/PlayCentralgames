@@ -1,0 +1,28 @@
+{
+  "name": "playcentralgames",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
+    "lint:html": "html-validate \"**/*.html\" --ignore \"node_modules/**\"",
+    "lint:css": "stylelint \"**/*.css\" --ignore-path .gitignore",
+    "lint:js": "eslint \"**/*.js\" --ignore-pattern node_modules/",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:a11y": "playwright test tests/accessibility.e2e.ts",
+    "audit:images": "node scripts/check-images.js",
+    "audit:seo": "node scripts/check-seo-files.js",
+    "lighthouse": "lhci autorun"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "^1.49.1",
+    "eslint": "^8.57.1",
+    "glob": "^10.4.5",
+    "html-validate": "^9.9.0",
+    "prettier": "^3.4.2",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}

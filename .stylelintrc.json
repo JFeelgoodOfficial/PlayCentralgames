@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "declaration-block-no-duplicate-properties": true,
+    "declaration-no-important": [true, { "severity": "warning" }],
+    "color-no-invalid-hex": true,
+    "custom-property-pattern": "^[a-z][a-z0-9-]*$",
+    "color-named": "never",
+    "declaration-property-value-disallowed-list": {},
+    "property-no-unknown": true,
+    "no-duplicate-selectors": true,
+    "shorthand-property-no-redundant-values": true,
+    "properties-order": "alphabetical"
+  }
+}
