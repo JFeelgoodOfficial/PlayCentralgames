@@ -1,0 +1,27 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "require-sri": "off",
+    "no-trailing-whitespace": "warn",
+    "attr-quotes": "error",
+    "void-style": "error",
+    "no-implicit-close": "error",
+
+    "alt-text": "error",
+    "empty-alt-text": "error",
+
+    "no-dead-links": "off",
+
+    "wcag/h30": "error",
+    "wcag/h32": "error",
+    "wcag/h37": "error",
+
+    "script-type": "error"
+  },
+  "elements": [
+    "html5"
+  ],
+  "plugins": [],
+  "transform": {},
+  "root": true
+}
