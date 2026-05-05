@@ -15,14 +15,14 @@
     "lighthouse": "lhci autorun"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.10.1",
-    "@lhci/cli": "^0.14.0",
-    "@playwright/test": "^1.49.1",
+    "@axe-core/playwright": "^4.11.3",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.59.1",
     "eslint": "^8.57.1",
     "glob": "^10.4.5",
-    "html-validate": "^9.9.0",
-    "prettier": "^3.4.2",
-    "stylelint": "^16.12.0",
-    "stylelint-config-standard": "^36.0.1"
+    "html-validate": "^10.15.0",
+    "prettier": "^3.8.3",
+    "stylelint": "^17.10.0",
+    "stylelint-config-standard": "^40.0.0"
   }
 }
