@@ -2,3 +2,23 @@ User-agent: *
 Allow: /
 
 Sitemap: https://playcentralgames.com/sitemap.xml
+
+# AI training crawlers — point to our LLM index
+User-agent: GPTBot
+Allow: /llms.txt
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /llms.txt
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /llms.txt
+Allow: /
+
+User-agent: Google-Extended
+Allow: /llms.txt
+Allow: /
+
+# LLM index
+LLMs: https://playcentralgames.com/llms.txt
