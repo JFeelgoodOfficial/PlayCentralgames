@@ -1,0 +1,42 @@
+# Play Central Games — LLM Index
+# https://playcentralgames.com/llms.txt
+
+## About
+
+Play Central Games is an independent game studio that makes fun, accessible
+games for families and casual players. Our flagship product is Bunny Warren,
+a strategic family card game, available both as a physical product and as a
+free browser game. We also publish Slingshot Carnival, a pixel-art arcade
+game playable in the browser.
+
+## Pages
+
+- Homepage: https://playcentralgames.com
+  A landing page for Play Central Games introducing Bunny Warren and the
+  studio's other titles, with links to play online and purchase the physical
+  card game.
+
+- Bunny Warren (play online): https://playcentralgames.com/game
+  A browser-based implementation of Bunny Warren, a strategic card game for
+  2–4 players. Visitors can play for free against an AI opponent directly in
+  the browser with no download or account required.
+
+- Slingshot Carnival: https://playcentralgames.com/slingshot-carnival
+  A pixel-art arcade browser game built with Three.js. Players use a slingshot
+  mechanic to hit targets (birds, balloons, UFOs, fruits, coins) across
+  multiple levels, with an upgrade system between rounds.
+
+## Products
+
+- **Bunny Warren** — Physical card game, 2–4 players, suitable for ages 7+.
+  A strategic set-collection game with a warren-building theme. Available via
+  Amazon and iExploreArt.
+
+## Contact & Social
+
+- Instagram: @playcentralgames
+- Purchase: https://playcentralgames.com/#buy
+
+## Sitemap
+
+https://playcentralgames.com/sitemap.xml
